@@ -1,169 +1,172 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Conheça os produtos da Campos Gerais Pet Shop e consulte disponibilidade pelo WhatsApp.">
+    <meta name="description"
+        content="Conheça os produtos da Campos Gerais Pet Shop e consulte disponibilidade pelo WhatsApp.">
 
     <title>Produtos | Campos Gerais</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="produtos.css">
+
+    <script>
+        window.va = window.va || function () {
+            (window.vaq = window.vaq || []).push(arguments);
+        };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    
 </head>
+
 <body>
 
-<header>
-    <div class="container nav">
-        <a class="brand" href="index.html">
-            <div class="brand-mark">CG</div>
-            <div class="brand-text">
-                <strong>Campos Gerais</strong>
-                <span>Pet Shop e Clínica Veterinária</span>
-            </div>
-        </a>
-
-        <nav aria-label="Navegação principal">
-            <a href="index.html">Início</a>
-            <a href="sobre.html">Sobre</a>
-            <a href="servicos.html">Serviços</a>
-            <a href="produtos.html" aria-current="page">Produtos</a>
-            <a href="avaliacoes.html">Avaliações</a>
-            <a class="nav-button" href="contato.html">Contato</a>
-        </nav>
-    </div>
-</header>
-
-<main>
-    <section class="catalog-hero">
-        <div class="container">
-            <span class="eyebrow">Catálogo Campos Gerais</span>
-
-            <h1>Tudo o que seu pet precisa</h1>
-
-            <p>
-                Encontre produtos para cuidar do seu companheiro.
-                Escolha seus favoritos e consulte a disponibilidade
-                diretamente com nossa equipe.
-            </p>
-
-            <a class="button button-primary" href="#catalogo">
-                Explorar produtos
+    <header>
+        <div class="container nav">
+            <a class="brand" href="index.html">
+                <div class="brand-mark">CG</div>
+                <div class="brand-text">
+                    <strong>Campos Gerais</strong>
+                    <span>Pet Shop e Clínica Veterinária</span>
+                </div>
             </a>
+
+            <nav aria-label="Navegação principal">
+                <a href="index.html">Início</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="servicos.html">Serviços</a>
+                <a href="produtos.html" aria-current="page">Produtos</a>
+                <a href="avaliacoes.html">Avaliações</a>
+                <a class="nav-button" href="contato.html">Contato</a>
+            </nav>
         </div>
-    </section>
+    </header>
 
-    <section class="catalog-section" id="catalogo">
-        <div class="container">
+    <main>
+        <section class="catalog-hero">
+            <div class="container">
+                <span class="eyebrow">Catálogo Campos Gerais</span>
 
-            <div class="catalog-heading">
-                <div class="section-head">
-                    <h2>Nosso catálogo</h2>
-                    <p>Selecione os produtos que deseja consultar.</p>
+                <h1>Tudo o que seu pet precisa</h1>
+
+                <p>
+                    Encontre produtos para cuidar do seu companheiro.
+                    Escolha seus favoritos e consulte a disponibilidade
+                    diretamente com nossa equipe.
+                </p>
+
+                <a class="button button-primary" href="#catalogo">
+                    Explorar produtos
+                </a>
+            </div>
+        </section>
+
+        <section class="catalog-section" id="catalogo">
+            <div class="container">
+
+                <div class="catalog-heading">
+                    <div class="section-head">
+                        <h2>Nosso catálogo</h2>
+                        <p>Selecione os produtos que deseja consultar.</p>
+                    </div>
+
+                    <div class="cart-summary">
+                        <span class="cart-number" id="cart-count">0</span>
+                        <span>itens selecionados</span>
+                        <button id="clear-cart" class="text-button" type="button">
+                            Limpar
+                        </button>
+                    </div>
                 </div>
 
-                <div class="cart-summary">
-                    <span class="cart-number" id="cart-count">0</span>
-                    <span>itens selecionados</span>
-                    <button id="clear-cart" class="text-button" type="button">
-                        Limpar
+                <label class="search-label" for="product-search">
+                    Pesquisar produtos
+                </label>
+
+                <input id="product-search" class="product-search" type="search"
+                    placeholder="Digite o nome de um produto..." autocomplete="off">
+
+                <div class="category-filters" id="category-filters">
+                    <button class="category-button active" data-category="Todos" type="button">Todos</button>
+                    <button class="category-button" data-category="Cães" type="button">Cães</button>
+                    <button class="category-button" data-category="Gatos" type="button">Gatos</button>
+                    <button class="category-button" data-category="Acessórios" type="button">Acessórios</button>
+                    <button class="category-button" data-category="Higiene" type="button">Higiene</button>
+                </div>
+
+                <div class="product-grid" id="product-grid"></div>
+
+                <div class="empty-state" id="empty-state" hidden>
+                    <h3>Nenhum produto encontrado</h3>
+                    <p>Tente pesquisar outro nome ou escolher outra categoria.</p>
+                </div>
+
+                <div class="order-panel">
+                    <div>
+                        <h2>Seu pet merece esse cuidado</h2>
+                        <p>
+                            Confira sua seleção e envie pelo WhatsApp para
+                            consultar preços e disponibilidade.
+                        </p>
+                    </div>
+
+                    <button class="button button-primary" id="send-order" type="button" disabled>
+                        Enviar pedido pelo WhatsApp
                     </button>
                 </div>
+
+                <p class="catalog-notice">
+                    Produtos, imagens e preços demonstrativos. Consulte a loja
+                    para confirmar disponibilidade e valores.
+                </p>
             </div>
+        </section>
+    </main>
 
-            <label class="search-label" for="product-search">
-                Pesquisar produtos
-            </label>
-
-            <input
-                id="product-search"
-                class="product-search"
-                type="search"
-                placeholder="Digite o nome de um produto..."
-                autocomplete="off"
-            >
-
-            <div class="category-filters" id="category-filters">
-                <button class="category-button active" data-category="Todos" type="button">Todos</button>
-                <button class="category-button" data-category="Cães" type="button">Cães</button>
-                <button class="category-button" data-category="Gatos" type="button">Gatos</button>
-                <button class="category-button" data-category="Acessórios" type="button">Acessórios</button>
-                <button class="category-button" data-category="Higiene" type="button">Higiene</button>
-            </div>
-
-            <div class="product-grid" id="product-grid"></div>
-
-            <div class="empty-state" id="empty-state" hidden>
-                <h3>Nenhum produto encontrado</h3>
-                <p>Tente pesquisar outro nome ou escolher outra categoria.</p>
-            </div>
-
-            <div class="order-panel">
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
                 <div>
-                    <h2>Seu pet merece esse cuidado</h2>
-                    <p>
-                        Confira sua seleção e envie pelo WhatsApp para
-                        consultar preços e disponibilidade.
-                    </p>
+                    <h3>Campos Gerais</h3>
+                    <p>Pet Shop e Clínica Veterinária em Ponta Grossa - PR.</p>
                 </div>
 
-                <button class="button button-primary" id="send-order" type="button" disabled>
-                    Enviar pedido pelo WhatsApp
-                </button>
+                <div>
+                    <h3>Navegação</h3>
+                    <p><a href="index.html">Início</a></p>
+                    <p><a href="sobre.html">Sobre</a></p>
+                    <p><a href="servicos.html">Serviços</a></p>
+                    <p><a href="avaliacoes.html">Avaliações</a></p>
+                    <p><a href="contato.html">Contato</a></p>
+                </div>
+
+                <div>
+                    <h3>Contato</h3>
+                    <p>Av. Melvin Jones, 157</p>
+                    <p>Chapada - Ponta Grossa - PR</p>
+                    <p>(42) 98441-0430</p>
+                </div>
             </div>
 
-            <p class="catalog-notice">
-                Produtos, imagens e preços demonstrativos. Consulte a loja
-                para confirmar disponibilidade e valores.
-            </p>
-        </div>
-    </section>
-</main>
-
-<footer>
-    <div class="container">
-        <div class="footer-grid">
-            <div>
-                <h3>Campos Gerais</h3>
-                <p>Pet Shop e Clínica Veterinária em Ponta Grossa - PR.</p>
-            </div>
-
-            <div>
-                <h3>Navegação</h3>
-                <p><a href="index.html">Início</a></p>
-                <p><a href="sobre.html">Sobre</a></p>
-                <p><a href="servicos.html">Serviços</a></p>
-                <p><a href="avaliacoes.html">Avaliações</a></p>
-                <p><a href="contato.html">Contato</a></p>
-            </div>
-
-            <div>
-                <h3>Contato</h3>
-                <p>Av. Melvin Jones, 157</p>
-                <p>Chapada - Ponta Grossa - PR</p>
-                <p>(42) 98441-0430</p>
+            <div class="footer-bottom">
+                © 2026 Campos Gerais - Pet Shop e Clínica Veterinária.
+                Todos os direitos reservados.
             </div>
         </div>
+    </footer>
 
-        <div class="footer-bottom">
-            © 2026 Campos Gerais - Pet Shop e Clínica Veterinária.
-            Todos os direitos reservados.
-        </div>
-    </div>
-</footer>
+    <a aria-label="Falar pelo WhatsApp" class="whatsapp-float" href="https://wa.me/5542984410430"
+        rel="noopener noreferrer" target="_blank">WhatsApp</a>
 
-<a
-    aria-label="Falar pelo WhatsApp"
-    class="whatsapp-float"
-    href="https://wa.me/5542984410430"
-    rel="noopener noreferrer"
-    target="_blank"
->WhatsApp</a>
-
-<script src="produtos.js"></script>
+    <script src="produtos.js"></script>
 </body>
+
 </html>
