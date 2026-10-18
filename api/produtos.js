@@ -13,16 +13,19 @@ export default async function handler(req, res) {
 
         const produtos = await conexao`
             SELECT
-                id,
-                nome,
-                descricao,
-                preco,
-                estoque,
-                imagem,
-                categoria_id
-            FROM produtos
-            WHERE ativo = TRUE
-            ORDER BY id DESC
+                p.id,
+                p.nome,
+                p.descricao,
+                p.preco,
+                p.estoque,
+                p.imagem,
+                p.categoria_id,
+                c.nome AS categoria
+            FROM produtos p
+            LEFT JOIN categorias c
+                ON c.id = p.categoria_id
+            WHERE p.ativo = TRUE
+            ORDER BY p.id DESC
         `;
 
         return res.status(200).json(produtos);

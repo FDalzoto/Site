@@ -1,80 +1,5 @@
 
-/*
- * CATÁLOGO CAMPOS GERAIS
- * Não utiliza banco de dados.
- *
- * Para cadastrar produtos, edite a lista abaixo.
- * Confirme preços, imagens e disponibilidade antes de publicar.
- */
-
 const WHATSAPP_NUMBER = "5542984410430";
-
-const products = [
-    {
-        id: 1,
-        name: "Ração para cães",
-        category: "Cães",
-        description: "Alimentação para a rotina do seu cão. Consulte marcas e tamanhos.",
-        price: null,
-        image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=700&q=80"
-    },
-    {
-        id: 2,
-        name: "Petiscos para cães",
-        category: "Cães",
-        description: "Opções de petiscos para agradar seu companheiro.",
-        price: null,
-        image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=700&q=80"
-    },
-    {
-        id: 3,
-        name: "Brinquedos para pets",
-        category: "Acessórios",
-        description: "Brinquedos para diversão e enriquecimento ambiental.",
-        price: null,
-        image: "https://images.unsplash.com/photo-1535294435445-d7249524ef2e?auto=format&fit=crop&w=700&q=80"
-    },
-    {
-        id: 4,
-        name: "Coleiras e guias",
-        category: "Acessórios",
-        description: "Consulte modelos, tamanhos e opções para passeios.",
-        price: null,
-        image: "https://images.unsplash.com/photo-1551717743-49959800b1f6?auto=format&fit=crop&w=700&q=80"
-    },
-    {
-        id: 5,
-        name: "Produtos para gatos",
-        category: "Gatos",
-        description: "Consulte opções de alimentação e acessórios para felinos.",
-        price: null,
-        image: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=700&q=80"
-    },
-    {
-        id: 6,
-        name: "Higiene para pets",
-        category: "Higiene",
-        description: "Produtos para a rotina de higiene e cuidados do seu pet.",
-        price: null,
-        image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=700&q=80"
-    },
-    {
-        id: 7,
-        name: "Camas para pets",
-        category: "Acessórios",
-        description: "Consulte modelos e tamanhos para o conforto do seu pet.",
-        price: null,
-        image: "https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?auto=format&fit=crop&w=700&q=80"
-    },
-    {
-        id: 8,
-        name: "Areia para gatos",
-        category: "Gatos",
-        description: "Consulte marcas e tipos de areia disponíveis.",
-        price: null,
-        image: "https://images.unsplash.com/photo-1511044568932-338cba0ad803?auto=format&fit=crop&w=700&q=80"
-    }
-];
 
 const productGrid = document.getElementById("product-grid");
 const searchInput = document.getElementById("product-search");
@@ -86,10 +11,13 @@ const sendOrderButton = document.getElementById("send-order");
 
 const cart = new Map();
 
+let products = [];
 let selectedCategory = "Todos";
+let carregando = true;
+let erroCarregamento = false;
 
 function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, character => ({
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
@@ -99,11 +27,15 @@ function escapeHTML(value) {
 }
 
 function formatPrice(product) {
-    if (typeof product.price === "number" &&
-        Number.isFinite(product.price) &&
-        product.price >= 0) {
+    const price = Number(product.price);
 
-        return product.price.toLocaleString("pt-BR", {
+    if (
+        product.price !== null &&
+        product.price !== "" &&
+        Number.isFinite(price) &&
+        price >= 0
+    ) {
+        return price.toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL"
         });
@@ -112,7 +44,54 @@ function formatPrice(product) {
     return "Consultar preço";
 }
 
+function renderCategories() {
+    const categories = [
+        "Todos",
+        ...new Set(
+            products
+                .map(product => product.category)
+                .filter(Boolean)
+        )
+    ];
+
+    if (!categories.includes(selectedCategory)) {
+        selectedCategory = "Todos";
+    }
+
+    categoryFilters.innerHTML = categories.map(category => `
+        <button
+            type="button"
+            data-category="${escapeHTML(category)}"
+            class="${category === selectedCategory ? "active" : ""}"
+            aria-pressed="${category === selectedCategory}"
+        >
+            ${escapeHTML(category)}
+        </button>
+    `).join("");
+}
+
 function renderProducts() {
+    if (carregando) {
+        productGrid.innerHTML = "<p>Carregando produtos...</p>";
+        emptyState.hidden = true;
+        updateCart();
+        return;
+    }
+
+    if (erroCarregamento) {
+        productGrid.innerHTML = `
+            <p>Não foi possível carregar os produtos.
+            Tente novamente em instantes.</p>
+            <button type="button" id="retry-products">
+                Tentar novamente
+            </button>
+        `;
+
+        emptyState.hidden = true;
+        updateCart();
+        return;
+    }
+
     const searchTerm = searchInput.value
         .trim()
         .toLocaleLowerCase("pt-BR");
@@ -134,18 +113,22 @@ function renderProducts() {
 
     productGrid.innerHTML = filteredProducts.map(product => {
         const quantity = cart.get(product.id) || 0;
+        const stock = Number(product.stock);
+        const hasStock = Number.isFinite(stock) && stock > 0;
+        const canAdd = hasStock && quantity < stock;
 
         return `
             <article class="product-card">
                 <div class="product-image-wrap">
                     <img
                         class="product-image"
-                        src="${escapeHTML(product.image)}"
+                        src="${escapeHTML(product.image || "https://placehold.co/700x500/edf4ec/14532d?text=Produto")}"
                         alt="${escapeHTML(product.name)}"
                         loading="lazy"
                     >
+
                     <span class="product-category">
-                        ${escapeHTML(product.category)}
+                        ${escapeHTML(product.category || "Outros")}
                     </span>
                 </div>
 
@@ -153,13 +136,15 @@ function renderProducts() {
                     <h3>${escapeHTML(product.name)}</h3>
 
                     <p class="product-description">
-                        ${escapeHTML(product.description)}
+                        ${escapeHTML(product.description || "Consulte mais informações sobre este produto.")}
                     </p>
 
                     <div class="product-price">
                         ${escapeHTML(formatPrice(product))}
                         <small>
-                            Consulte preço e disponibilidade
+                            ${hasStock
+                                ? `Estoque informado: ${stock}`
+                                : "Produto indisponível no momento"}
                         </small>
                     </div>
 
@@ -168,10 +153,15 @@ function renderProducts() {
                             class="add-button ${quantity ? "selected" : ""}"
                             type="button"
                             data-add="${product.id}"
+                            ${canAdd ? "" : "disabled"}
                         >
-                            ${quantity
-                                ? `Adicionar mais (${quantity})`
-                                : "Adicionar ao pedido"}
+                            ${!hasStock
+                                ? "Sem estoque"
+                                : quantity >= stock
+                                    ? "Limite do estoque atingido"
+                                    : quantity
+                                        ? `Adicionar mais (${quantity})`
+                                        : "Adicionar ao pedido"}
                         </button>
 
                         ${quantity ? `
@@ -191,7 +181,6 @@ function renderProducts() {
 
     emptyState.hidden = filteredProducts.length !== 0;
 
-    // Evita que uma imagem indisponível quebre o card.
     productGrid.querySelectorAll(".product-image").forEach(image => {
         image.addEventListener("error", () => {
             image.src =
@@ -213,16 +202,73 @@ function updateCart() {
     sendOrderButton.disabled = totalItems === 0;
 }
 
+async function loadProducts() {
+    carregando = true;
+    erroCarregamento = false;
+    renderProducts();
+
+    try {
+        const response = await fetch("/api/produtos");
+
+        if (!response.ok) {
+            throw new Error("Falha ao consultar a API.");
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+            throw new Error("Resposta inválida da API.");
+        }
+
+        products = data.map(product => ({
+            id: Number(product.id),
+            name: product.nome,
+            category: product.categoria || "Outros",
+            description: product.descricao || "",
+            price: product.preco,
+            stock: Number(product.estoque),
+            image: product.imagem || ""
+        }));
+
+        const validIds = new Set(products.map(product => product.id));
+
+        for (const id of cart.keys()) {
+            if (!validIds.has(id)) {
+                cart.delete(id);
+            }
+        }
+
+        renderCategories();
+    } catch (error) {
+        console.error("Erro ao carregar produtos:", error);
+        erroCarregamento = true;
+    } finally {
+        carregando = false;
+        renderProducts();
+    }
+}
+
 productGrid.addEventListener("click", event => {
+    if (event.target.closest("#retry-products")) {
+        loadProducts();
+        return;
+    }
+
     const addButton = event.target.closest("[data-add]");
     const removeButton = event.target.closest("[data-remove]");
 
     if (addButton) {
         const id = Number(addButton.dataset.add);
+        const product = products.find(item => item.id === id);
 
-        cart.set(id, (cart.get(id) || 0) + 1);
+        if (!product) return;
 
-        renderProducts();
+        const quantity = cart.get(id) || 0;
+
+        if (quantity < product.stock) {
+            cart.set(id, quantity + 1);
+            renderProducts();
+        }
     }
 
     if (removeButton) {
@@ -250,13 +296,11 @@ categoryFilters.addEventListener("click", event => {
 
     categoryFilters.querySelectorAll("[data-category]")
         .forEach(categoryButton => {
-            const active = categoryButton === button;
+            const active =
+                categoryButton.dataset.category === selectedCategory;
 
             categoryButton.classList.toggle("active", active);
-            categoryButton.setAttribute(
-                "aria-pressed",
-                String(active)
-            );
+            categoryButton.setAttribute("aria-pressed", String(active));
         });
 
     renderProducts();
@@ -294,4 +338,6 @@ sendOrderButton.addEventListener("click", () => {
     window.open(whatsappURL, "_blank", "noopener,noreferrer");
 });
 
+renderCategories();
 renderProducts();
+loadProducts();
