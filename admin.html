@@ -1,11 +1,42 @@
- 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="same-origin">
     <title>Painel Administrativo | Campos Gerais Pet Shop</title>
+
+    <script>
+        document.documentElement.style.visibility = "hidden";
+
+        (async function protegerPainel() {
+            try {
+                const resposta = await fetch("/api/verificar-sessao", {
+                    method: "GET",
+                    credentials: "same-origin",
+                    cache: "no-store"
+                });
+
+                if (!resposta.ok) {
+                    window.location.replace("/login.html");
+                    return;
+                }
+
+                const resultado = await resposta.json();
+
+                if (resultado.autenticado !== true) {
+                    window.location.replace("/login.html");
+                    return;
+                }
+
+                document.documentElement.style.visibility = "visible";
+            } catch (erro) {
+                window.location.replace("/login.html");
+            }
+        })();
+    </script>
 
     <style>
         :root {
@@ -17,6 +48,7 @@
             --cinza: #64748b;
             --borda: #e2e8f0;
             --branco: #ffffff;
+            --vermelho: #b91c1c;
         }
 
         * {
@@ -42,6 +74,8 @@
             color: white;
             padding: 28px 18px;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
         }
 
         .logo {
@@ -80,6 +114,23 @@
             color: white;
         }
 
+        .sair {
+            width: 100%;
+            margin-top: auto;
+            padding: 13px 12px;
+            border: 1px solid #568365;
+            border-radius: 8px;
+            background: transparent;
+            color: white;
+            text-align: left;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .sair:hover {
+            background: #246b3d;
+        }
+
         .conteudo {
             flex: 1;
             min-width: 0;
@@ -112,17 +163,6 @@
             font-size: 12px;
             font-weight: 700;
             white-space: nowrap;
-        }
-
-        .aviso {
-            background: #fff7ed;
-            color: #9a3412;
-            border: 1px solid #fed7aa;
-            border-radius: 10px;
-            padding: 14px 16px;
-            font-size: 13px;
-            line-height: 1.6;
-            margin-bottom: 24px;
         }
 
         .resumo {
@@ -194,6 +234,12 @@
             background: var(--verde-escuro);
         }
 
+        .botao:disabled,
+        .sair:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
         .tabela-container {
             width: 100%;
             overflow-x: auto;
@@ -205,7 +251,8 @@
             text-align: left;
         }
 
-        th, td {
+        th,
+        td {
             padding: 16px 12px;
             border-bottom: 1px solid var(--borda);
             font-size: 13px;
@@ -222,6 +269,10 @@
             padding: 36px 12px;
             color: var(--cinza);
             line-height: 1.7;
+        }
+
+        .erro {
+            color: var(--vermelho);
         }
 
         .rodape {
@@ -264,6 +315,10 @@
                 margin-top: 16px;
             }
 
+            .sair {
+                margin-top: 20px;
+            }
+
             .conteudo {
                 padding: 18px;
             }
@@ -299,6 +354,10 @@
                 <div class="menu-titulo">Gerenciamento</div>
                 <a href="#produtos">Produtos</a>
             </nav>
+
+            <button type="button" class="sair" id="botaoSair">
+                ↪ Sair do painel
+            </button>
         </aside>
 
         <main class="conteudo">
@@ -308,18 +367,12 @@
                     <p>Gerencie o catálogo da sua loja em um só lugar.</p>
                 </div>
 
-                <div class="status">Painel em desenvolvimento</div>
+                <div class="status">Sessão autenticada</div>
             </header>
-
-            <div class="aviso">
-                <strong>Atenção:</strong> esta é a primeira versão visual do painel.
-                Ainda não existe login nem proteção administrativa. Não utilize
-                esta página para alterar dados reais até implementarmos a segurança.
-            </div>
 
             <section class="resumo">
                 <div class="card">
-                    <div class="rotulo">Total de produtos</div>
+                    <div class="rotulo">Produtos encontrados</div>
                     <div class="valor" id="totalProdutos">—</div>
                 </div>
 
@@ -384,13 +437,26 @@
             const status = document.getElementById("statusApi");
 
             try {
-                const resposta = await fetch("/api/produtos");
+                const resposta = await fetch("/api/produtos", {
+                    method: "GET",
+                    credentials: "same-origin",
+                    cache: "no-store"
+                });
+
+                if (resposta.status === 401) {
+                    window.location.replace("/login.html");
+                    return;
+                }
 
                 if (!resposta.ok) {
                     throw new Error("A API retornou um erro.");
                 }
 
                 const produtos = await resposta.json();
+
+                if (!Array.isArray(produtos)) {
+                    throw new Error("A resposta da API é inválida.");
+                }
 
                 total.textContent = produtos.length;
                 ativos.textContent = produtos.length;
@@ -407,7 +473,7 @@
                     return;
                 }
 
-                lista.innerHTML = "";
+                lista.replaceChildren();
 
                 produtos.forEach((produto) => {
                     const linha = document.createElement("tr");
@@ -416,10 +482,12 @@
                     nome.textContent = produto.nome ?? "Sem nome";
 
                     const categoria = document.createElement("td");
-                    categoria.textContent = produto.categoria ?? "Sem categoria";
+                    categoria.textContent =
+                        produto.categoria ?? "Sem categoria";
 
                     const preco = document.createElement("td");
                     const valor = Number(produto.preco);
+
                     preco.textContent = Number.isFinite(valor)
                         ? valor.toLocaleString("pt-BR", {
                             style: "currency",
@@ -439,17 +507,46 @@
                 total.textContent = "—";
                 ativos.textContent = "—";
                 status.textContent = "Erro";
+                status.classList.add("erro");
 
                 lista.innerHTML = `
                     <tr>
                         <td colspan="4" class="vazio">
                             Não foi possível carregar os produtos.
-                            Verifique se a API está funcionando.
+                            Verifique a conexão com a API.
                         </td>
                     </tr>
                 `;
             }
         }
+
+        document.getElementById("botaoSair").addEventListener(
+            "click",
+            async function () {
+                const botao = this;
+                botao.disabled = true;
+                botao.textContent = "Saindo...";
+
+                try {
+                    const resposta = await fetch("/api/logout", {
+                        method: "POST",
+                        credentials: "same-origin",
+                        cache: "no-store"
+                    });
+
+                    if (!resposta.ok) {
+                        throw new Error("Não foi possível encerrar a sessão.");
+                    }
+
+                    window.location.replace("/login.html");
+                } catch (erro) {
+                    console.error("Erro ao sair:", erro);
+                    botao.disabled = false;
+                    botao.textContent = "↪ Sair do painel";
+                    alert("Não foi possível sair. Tente novamente.");
+                }
+            }
+        );
 
         carregarProdutos();
     </script>
