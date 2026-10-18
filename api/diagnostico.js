@@ -5,6 +5,7 @@ export default async function handler(req, res) {
     const nomes = [
         "DATABASE_URL",
         "POSTGRES_URL",
+        "POSTGRES_URL_NON_POOLING",
         "PETSHOP_DATABASE_URL"
     ];
 
@@ -16,8 +17,9 @@ export default async function handler(req, res) {
         if (!url) {
             resultados.push({
                 variavel: nome,
-                status: "não configurada"
+                status: "nao configurada"
             });
+
             continue;
         }
 
@@ -25,12 +27,16 @@ export default async function handler(req, res) {
             const sql = neon(url);
 
             const banco = await sql`
-                SELECT current_database() AS banco,
-                       current_schema() AS esquema
+                SELECT
+                    current_database() AS banco,
+                    current_schema() AS esquema,
+                    current_user AS usuario
             `;
 
             const tabelas = await sql`
-                SELECT table_name
+                SELECT
+                    table_schema,
+                    table_name
                 FROM information_schema.tables
                 WHERE table_schema = 'public'
                 ORDER BY table_name
@@ -41,9 +47,20 @@ export default async function handler(req, res) {
                 status: "conectada",
                 banco: banco[0].banco,
                 esquema: banco[0].esquema,
-                tabelas: tabelas.map(t => t.table_name)
+                tabelasEncontradas: tabelas.length,
+                tabelas: tabelas.map(
+                    tabela => tabela.table_name
+                ),
+                possuiTabelaProdutos: tabelas.some(
+                    tabela => tabela.table_name === "produtos"
+                )
             });
-        } catch {
+        } catch (erro) {
+            console.error(
+                `Erro ao testar ${nome}:`,
+                erro.message
+            );
+
             resultados.push({
                 variavel: nome,
                 status: "falha na consulta"
