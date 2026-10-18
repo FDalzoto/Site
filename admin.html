@@ -1,0 +1,457 @@
+ 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Painel Administrativo | Campos Gerais Pet Shop</title>
+
+    <style>
+        :root {
+            --verde-escuro: #14532d;
+            --verde: #1f7a45;
+            --verde-claro: #e8f5e9;
+            --fundo: #f5f7f5;
+            --texto: #1f2937;
+            --cinza: #64748b;
+            --borda: #e2e8f0;
+            --branco: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--fundo);
+            color: var(--texto);
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--verde-escuro);
+            color: white;
+            padding: 28px 18px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitulo {
+            color: #cbdccf;
+            font-size: 12px;
+            margin-bottom: 36px;
+        }
+
+        .menu-titulo {
+            color: #b9d4c1;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 24px 10px 12px;
+        }
+
+        .menu a {
+            display: block;
+            color: #e7f1e9;
+            text-decoration: none;
+            padding: 13px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .menu a.ativo,
+        .menu a:hover {
+            background: #246b3d;
+            color: white;
+        }
+
+        .conteudo {
+            flex: 1;
+            min-width: 0;
+            padding: 32px;
+        }
+
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .topo h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .topo p {
+            color: var(--cinza);
+            font-size: 14px;
+        }
+
+        .status {
+            background: var(--verde-claro);
+            color: var(--verde-escuro);
+            padding: 10px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .aviso {
+            background: #fff7ed;
+            color: #9a3412;
+            border: 1px solid #fed7aa;
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .resumo {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .card {
+            background: var(--branco);
+            padding: 24px;
+            border: 1px solid var(--borda);
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+        }
+
+        .card .rotulo {
+            font-size: 13px;
+            color: var(--cinza);
+            margin-bottom: 14px;
+        }
+
+        .card .valor {
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--verde-escuro);
+        }
+
+        .secao {
+            background: var(--branco);
+            border: 1px solid var(--borda);
+            border-radius: 14px;
+            padding: 24px;
+        }
+
+        .secao-topo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .secao h2 {
+            font-size: 18px;
+        }
+
+        .secao-descricao {
+            color: var(--cinza);
+            font-size: 13px;
+            margin-top: 7px;
+        }
+
+        .botao {
+            display: inline-block;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            background: var(--verde);
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .botao:hover {
+            background: var(--verde-escuro);
+        }
+
+        .tabela-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--borda);
+            font-size: 13px;
+        }
+
+        th {
+            color: var(--cinza);
+            font-weight: 600;
+            background: #f8faf8;
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 36px 12px;
+            color: var(--cinza);
+            line-height: 1.7;
+        }
+
+        .rodape {
+            text-align: center;
+            color: var(--cinza);
+            font-size: 12px;
+            padding: 24px 0 0;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 210px;
+            }
+
+            .conteudo {
+                padding: 22px;
+            }
+
+            .resumo {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+
+            .subtitulo {
+                margin-bottom: 18px;
+            }
+
+            .menu-titulo {
+                margin-top: 16px;
+            }
+
+            .conteudo {
+                padding: 18px;
+            }
+
+            .topo,
+            .secao-topo {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .topo h1 {
+                font-size: 24px;
+            }
+
+            .secao {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="logo">🐾 Campos Gerais</div>
+            <div class="subtitulo">Pet Shop e Clínica Veterinária</div>
+
+            <nav class="menu">
+                <div class="menu-titulo">Principal</div>
+                <a href="admin.html" class="ativo">Visão geral</a>
+                <a href="produtos.html">Ver catálogo</a>
+
+                <div class="menu-titulo">Gerenciamento</div>
+                <a href="#produtos">Produtos</a>
+            </nav>
+        </aside>
+
+        <main class="conteudo">
+            <header class="topo">
+                <div>
+                    <h1>Painel administrativo</h1>
+                    <p>Gerencie o catálogo da sua loja em um só lugar.</p>
+                </div>
+
+                <div class="status">Painel em desenvolvimento</div>
+            </header>
+
+            <div class="aviso">
+                <strong>Atenção:</strong> esta é a primeira versão visual do painel.
+                Ainda não existe login nem proteção administrativa. Não utilize
+                esta página para alterar dados reais até implementarmos a segurança.
+            </div>
+
+            <section class="resumo">
+                <div class="card">
+                    <div class="rotulo">Total de produtos</div>
+                    <div class="valor" id="totalProdutos">—</div>
+                </div>
+
+                <div class="card">
+                    <div class="rotulo">Produtos ativos</div>
+                    <div class="valor" id="produtosAtivos">—</div>
+                </div>
+
+                <div class="card">
+                    <div class="rotulo">Situação da API</div>
+                    <div class="valor" id="statusApi" style="font-size: 20px;">
+                        Verificando...
+                    </div>
+                </div>
+            </section>
+
+            <section class="secao" id="produtos">
+                <div class="secao-topo">
+                    <div>
+                        <h2>Produtos cadastrados</h2>
+                        <p class="secao-descricao">
+                            Informações carregadas do banco de dados.
+                        </p>
+                    </div>
+
+                    <a class="botao" href="produtos.html">Ver catálogo</a>
+                </div>
+
+                <div class="tabela-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Categoria</th>
+                                <th>Preço</th>
+                                <th>Estoque</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="listaProdutos">
+                            <tr>
+                                <td colspan="4" class="vazio">
+                                    Carregando produtos...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="rodape">
+                Campos Gerais Pet Shop · Área administrativa
+            </div>
+        </main>
+    </div>
+
+    <script>
+        async function carregarProdutos() {
+            const lista = document.getElementById("listaProdutos");
+            const total = document.getElementById("totalProdutos");
+            const ativos = document.getElementById("produtosAtivos");
+            const status = document.getElementById("statusApi");
+
+            try {
+                const resposta = await fetch("/api/produtos");
+
+                if (!resposta.ok) {
+                    throw new Error("A API retornou um erro.");
+                }
+
+                const produtos = await resposta.json();
+
+                total.textContent = produtos.length;
+                ativos.textContent = produtos.length;
+                status.textContent = "Conectada";
+
+                if (produtos.length === 0) {
+                    lista.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="vazio">
+                                Nenhum produto encontrado no banco de dados.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                lista.innerHTML = "";
+
+                produtos.forEach((produto) => {
+                    const linha = document.createElement("tr");
+
+                    const nome = document.createElement("td");
+                    nome.textContent = produto.nome ?? "Sem nome";
+
+                    const categoria = document.createElement("td");
+                    categoria.textContent = produto.categoria ?? "Sem categoria";
+
+                    const preco = document.createElement("td");
+                    const valor = Number(produto.preco);
+                    preco.textContent = Number.isFinite(valor)
+                        ? valor.toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL"
+                        })
+                        : "Preço indisponível";
+
+                    const estoque = document.createElement("td");
+                    estoque.textContent = produto.estoque ?? "—";
+
+                    linha.append(nome, categoria, preco, estoque);
+                    lista.appendChild(linha);
+                });
+            } catch (erro) {
+                console.error("Erro ao carregar produtos:", erro);
+
+                total.textContent = "—";
+                ativos.textContent = "—";
+                status.textContent = "Erro";
+
+                lista.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="vazio">
+                            Não foi possível carregar os produtos.
+                            Verifique se a API está funcionando.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        carregarProdutos();
+    </script>
+</body>
+</html>
