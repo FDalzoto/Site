@@ -57,34 +57,39 @@ export default async function handler(req, res) {
     }
 
     try {
-        const token =
-            process.env.PETSHOP_PUBLIC_BLOB_READ_WRITE_TOKEN ||
-            process.env.BLOB_READ_WRITE_TOKEN;
+        const storeId =
+            process.env.PETSHOP_PUBLIC_BLOB_STORE_ID;
 
-        const opcoes = {
-            access: "public",
-            contentType: tipo,
-            addRandomSuffix: true
-        };
+        if (!storeId) {
+            console.error(
+                "Variável PETSHOP_PUBLIC_BLOB_STORE_ID ausente."
+            );
 
-        if (token) {
-            opcoes.token = token;
+            return res.status(500).json({
+                erro: "O armazenamento de imagens não está configurado."
+            });
         }
 
         const blob = await put(
             `produtos/${randomUUID()}.${extensao}`,
             req,
-            opcoes
+            {
+                access: "public",
+                storeId: storeId,
+                contentType: tipo,
+                addRandomSuffix: true
+            }
         );
 
         return res.status(200).json({
+            sucesso: true,
             url: blob.url
         });
     } catch (erro) {
-        console.error("Erro no upload da imagem:", erro);
+        console.error("Falha no upload do Blob:", erro);
 
         return res.status(500).json({
-            erro: "Não foi possível enviar a imagem. Verifique a configuração de acesso ao Blob."
+            erro: "Falha no upload da imagem. Consulte os logs da Vercel."
         });
     }
 }
