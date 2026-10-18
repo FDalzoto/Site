@@ -403,6 +403,64 @@
             background: #fef2f2;
         }
 
+        /* Janela da câmera */
+
+        .modal-camera {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.85);
+        }
+
+        .modal-camera[hidden] {
+            display: none;
+        }
+
+        .conteudo-camera {
+            width: 100%;
+            max-width: 600px;
+            max-height: 95vh;
+            overflow-y: auto;
+            padding: 22px;
+            background: white;
+            border-radius: 14px;
+        }
+
+        .conteudo-camera h2 {
+            margin-bottom: 16px;
+        }
+
+        #videoCamera {
+            display: block;
+            width: 100%;
+            max-height: 60vh;
+            background: #111;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+
+        #erroCamera {
+            margin-top: 12px;
+            color: var(--vermelho);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .botoes-camera {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .botoes-camera button {
+            flex: 1;
+        }
+
         .tabela-container {
             width: 100%;
             overflow-x: auto;
@@ -506,11 +564,13 @@
                 grid-column: auto;
             }
 
-            .botoes-imagem {
+            .botoes-imagem,
+            .botoes-camera {
                 flex-direction: column;
             }
 
-            .botao-imagem {
+            .botao-imagem,
+            .botoes-camera button {
                 width: 100%;
             }
         }
@@ -637,8 +697,8 @@
 
                         <div class="area-imagem">
                             <p class="secao-descricao">
-                                Tire uma foto do produto ou escolha uma imagem
-                                salva no seu dispositivo.
+                                Tire uma foto com a câmera ou escolha uma
+                                imagem salva no seu dispositivo.
                             </p>
 
                             <div class="botoes-imagem">
@@ -680,10 +740,7 @@
                                     alt="Pré-visualização do produto"
                                 >
 
-                                <p
-                                    id="nomeArquivo"
-                                    class="nome-arquivo"
-                                ></p>
+                                <p id="nomeArquivo" class="nome-arquivo"></p>
 
                                 <button
                                     type="button"
@@ -761,7 +818,30 @@
         </main>
     </div>
 
+    <!-- Janela da câmera -->
+    <div id="modalCamera" class="modal-camera" hidden>
+        <div class="conteudo-camera">
+            <h2>Tirar foto do produto</h2>
+
+            <video id="videoCamera" autoplay playsinline muted></video>
+
+            <p id="erroCamera" role="status" aria-live="polite"></p>
+
+            <div class="botoes-camera">
+                <button type="button" id="capturarFoto" class="botao">
+                    📸 Capturar foto
+                </button>
+
+                <button type="button" id="fecharCamera" class="botao-imagem">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        /* Carregar produtos */
+
         async function carregarProdutos() {
             const lista = document.getElementById("listaProdutos");
             const total = document.getElementById("totalProdutos");
@@ -813,7 +893,7 @@
 
                 lista.replaceChildren();
 
-                produtos.forEach((produto) => {
+                produtos.forEach(produto => {
                     const linha = document.createElement("tr");
 
                     const nome = document.createElement("td");
@@ -862,6 +942,8 @@
             }
         }
 
+        /* Carregar categorias */
+
         async function carregarCategorias() {
             const select = document.getElementById("categoriaProduto");
 
@@ -899,7 +981,7 @@
 
                 select.appendChild(opcaoInicial);
 
-                categorias.forEach((categoria) => {
+                categorias.forEach(categoria => {
                     const opcao = document.createElement("option");
                     opcao.value = categoria.id;
                     opcao.textContent = categoria.nome;
@@ -922,6 +1004,7 @@
 
         let arquivoImagemSelecionado = null;
         let urlPreviaImagem = null;
+        let fluxoCamera = null;
 
         const inputGaleria = document.getElementById("imagemProduto");
         const inputCamera = document.getElementById("imagemCamera");
@@ -929,17 +1012,16 @@
         const botaoGaleria = document.getElementById("botaoGaleria");
         const botaoRemoverImagem =
             document.getElementById("botaoRemoverImagem");
+
         const previaImagem = document.getElementById("previaImagem");
         const imagemPreview = document.getElementById("imagemPreview");
         const nomeArquivo = document.getElementById("nomeArquivo");
 
-        botaoCamera.addEventListener("click", () => {
-            inputCamera.click();
-        });
-
-        botaoGaleria.addEventListener("click", () => {
-            inputGaleria.click();
-        });
+        const modalCamera = document.getElementById("modalCamera");
+        const videoCamera = document.getElementById("videoCamera");
+        const capturarFoto = document.getElementById("capturarFoto");
+        const fecharCamera = document.getElementById("fecharCamera");
+        const erroCamera = document.getElementById("erroCamera");
 
         function selecionarImagem(arquivo) {
             if (!arquivo) {
@@ -972,29 +1054,189 @@
             }
 
             urlPreviaImagem = URL.createObjectURL(arquivo);
-
             imagemPreview.src = urlPreviaImagem;
-            nomeArquivo.textContent = arquivo.name;
+            nomeArquivo.textContent = arquivo.name || "Foto do produto";
             previaImagem.style.display = "block";
         }
 
+        async function abrirCamera() {
+            erroCamera.textContent = "";
+            modalCamera.hidden = false;
+
+            if (
+                !navigator.mediaDevices ||
+                !navigator.mediaDevices.getUserMedia
+            ) {
+                erroCamera.textContent =
+                    "A câmera integrada não está disponível neste navegador. " +
+                    "Tente escolher uma imagem ou usar a opção de câmera do dispositivo.";
+
+                return;
+            }
+
+            botaoCamera.disabled = true;
+
+            try {
+                fluxoCamera = await navigator.mediaDevices.getUserMedia({
+                    audio: false,
+                    video: {
+                        facingMode: { ideal: "environment" },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                });
+
+                videoCamera.srcObject = fluxoCamera;
+                await videoCamera.play();
+            } catch (erro) {
+                console.error("Erro ao abrir câmera:", erro);
+
+                if (fluxoCamera) {
+                    fluxoCamera.getTracks().forEach(track => track.stop());
+                    fluxoCamera = null;
+                }
+
+                const mensagens = {
+                    NotAllowedError:
+                        "A permissão para usar a câmera foi negada. " +
+                        "Permita o acesso à câmera nas configurações do navegador.",
+                    NotFoundError:
+                        "Não foi encontrada uma câmera neste dispositivo.",
+                    NotReadableError:
+                        "A câmera está ocupada ou não pode ser acessada. " +
+                        "Feche outros aplicativos que possam estar usando-a.",
+                    OverconstrainedError:
+                        "A câmera não oferece as configurações solicitadas."
+                };
+
+                erroCamera.textContent =
+                    mensagens[erro.name] ||
+                    "Não foi possível abrir a câmera. Verifique as permissões do dispositivo.";
+            } finally {
+                botaoCamera.disabled = false;
+            }
+        }
+
+        function fecharCameraModal() {
+            if (fluxoCamera) {
+                fluxoCamera.getTracks().forEach(track => track.stop());
+                fluxoCamera = null;
+            }
+
+            videoCamera.srcObject = null;
+            modalCamera.hidden = true;
+            erroCamera.textContent = "";
+        }
+
+        botaoCamera.addEventListener("click", abrirCamera);
+
+        botaoGaleria.addEventListener("click", () => {
+            inputGaleria.click();
+        });
+
         inputGaleria.addEventListener("change", () => {
-            const arquivo = inputGaleria.files[0];
-
-            selecionarImagem(arquivo);
-
-            // Permite escolher novamente o mesmo arquivo.
+            selecionarImagem(inputGaleria.files[0]);
             inputGaleria.value = "";
         });
 
         inputCamera.addEventListener("change", () => {
-            const arquivo = inputCamera.files[0];
-
-            selecionarImagem(arquivo);
-
-            // Mantém o arquivo selecionado em memória.
-            // Limpa o campo para permitir tirar outra foto.
+            selecionarImagem(inputCamera.files[0]);
             inputCamera.value = "";
+        });
+
+        capturarFoto.addEventListener("click", async () => {
+            if (!videoCamera.videoWidth || !videoCamera.videoHeight) {
+                erroCamera.textContent =
+                    "Aguarde a câmera iniciar antes de tirar a foto.";
+                return;
+            }
+
+            capturarFoto.disabled = true;
+
+            try {
+                const canvas = document.createElement("canvas");
+
+                const larguraOriginal = videoCamera.videoWidth;
+                const alturaOriginal = videoCamera.videoHeight;
+
+                const escala = Math.min(
+                    1,
+                    1600 / Math.max(larguraOriginal, alturaOriginal)
+                );
+
+                canvas.width = Math.round(larguraOriginal * escala);
+                canvas.height = Math.round(alturaOriginal * escala);
+
+                const contexto = canvas.getContext("2d");
+
+                if (!contexto) {
+                    throw new Error(
+                        "Não foi possível preparar a imagem."
+                    );
+                }
+
+                contexto.drawImage(
+                    videoCamera,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                const blob = await new Promise((resolve, reject) => {
+                    canvas.toBlob(
+                        resultado => {
+                            if (resultado) {
+                                resolve(resultado);
+                            } else {
+                                reject(
+                                    new Error(
+                                        "Não foi possível gerar a foto."
+                                    )
+                                );
+                            }
+                        },
+                        "image/jpeg",
+                        0.82
+                    );
+                });
+
+                const arquivo = new File(
+                    [blob],
+                    `produto-${Date.now()}.jpg`,
+                    { type: "image/jpeg" }
+                );
+
+                if (arquivo.size > 4 * 1024 * 1024) {
+                    throw new Error(
+                        "A foto ultrapassou 4 MB. Tente tirar outra foto."
+                    );
+                }
+
+                selecionarImagem(arquivo);
+                fecharCameraModal();
+            } catch (erro) {
+                console.error("Erro ao capturar foto:", erro);
+
+                erroCamera.textContent =
+                    erro.message || "Não foi possível capturar a foto.";
+            } finally {
+                capturarFoto.disabled = false;
+            }
+        });
+
+        fecharCamera.addEventListener("click", fecharCameraModal);
+
+        modalCamera.addEventListener("click", evento => {
+            if (evento.target === modalCamera) {
+                fecharCameraModal();
+            }
+        });
+
+        document.addEventListener("keydown", evento => {
+            if (evento.key === "Escape" && !modalCamera.hidden) {
+                fecharCameraModal();
+            }
         });
 
         botaoRemoverImagem.addEventListener("click", () => {
@@ -1103,14 +1345,8 @@
                     }
 
                     const produto = {
-                        nome: String(
-                            dados.get("nome") || ""
-                        ).trim(),
-
-                        descricao: String(
-                            dados.get("descricao") || ""
-                        ).trim(),
-
+                        nome: String(dados.get("nome") || "").trim(),
+                        descricao: String(dados.get("descricao") || "").trim(),
                         preco: Number(dados.get("preco")),
                         estoque: Number(dados.get("estoque")),
                         categoria_id: Number(dados.get("categoria_id")),
@@ -1164,7 +1400,6 @@
                     mensagem.classList.add("mensagem-sucesso");
 
                     formulario.reset();
-
                     botaoRemoverImagem.click();
 
                     await carregarProdutos();
@@ -1217,6 +1452,8 @@
                 }
             }
         );
+
+        /* Inicialização do painel */
 
         carregarProdutos();
         carregarCategorias();
