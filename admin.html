@@ -725,7 +725,9 @@
                 }
 
                 if (!resposta.ok) {
-                    throw new Error("Não foi possível consultar as categorias.");
+                    throw new Error(
+                        "Não foi possível consultar as categorias."
+                    );
                 }
 
                 const categorias = await resposta.json();
@@ -807,7 +809,7 @@
                         botao.textContent = "Enviando imagem...";
 
                         const respostaUpload = await fetch(
-                            "/api/image",
+                            "/api/upload-imagem",
                             {
                                 method: "POST",
                                 credentials: "same-origin",
@@ -818,7 +820,22 @@
                             }
                         );
 
-                        const resultadoUpload = await respostaUpload.json();
+                        const textoUpload = await respostaUpload.text();
+
+                        let resultadoUpload;
+
+                        try {
+                            resultadoUpload = JSON.parse(textoUpload);
+                        } catch {
+                            console.error(
+                                "Resposta inesperada do upload:",
+                                textoUpload
+                            );
+
+                            throw new Error(
+                                `A API de imagens retornou uma resposta inválida (HTTP ${respostaUpload.status}).`
+                            );
+                        }
 
                         if (respostaUpload.status === 401) {
                             window.location.replace("/login.html");
@@ -836,8 +853,10 @@
                     }
 
                     const produto = {
-                        nome: dados.get("nome").trim(),
-                        descricao: dados.get("descricao").trim(),
+                        nome: String(dados.get("nome") || "").trim(),
+                        descricao: String(
+                            dados.get("descricao") || ""
+                        ).trim(),
                         preco: Number(dados.get("preco")),
                         estoque: Number(dados.get("estoque")),
                         categoria_id: Number(dados.get("categoria_id")),
@@ -855,7 +874,22 @@
                         body: JSON.stringify(produto)
                     });
 
-                    const resultado = await resposta.json();
+                    const textoResposta = await resposta.text();
+
+                    let resultado;
+
+                    try {
+                        resultado = JSON.parse(textoResposta);
+                    } catch {
+                        console.error(
+                            "Resposta inesperada ao cadastrar produto:",
+                            textoResposta
+                        );
+
+                        throw new Error(
+                            `A API de cadastro retornou uma resposta inválida (HTTP ${resposta.status}).`
+                        );
+                    }
 
                     if (resposta.status === 401) {
                         window.location.replace("/login.html");
@@ -872,6 +906,7 @@
                     mensagem.textContent =
                         resultado.mensagem ||
                         "Produto cadastrado com sucesso!";
+
                     mensagem.classList.add("mensagem-sucesso");
 
                     formulario.reset();
@@ -883,6 +918,7 @@
                     mensagem.textContent =
                         erro.message ||
                         "Ocorreu um erro ao cadastrar o produto.";
+
                     mensagem.classList.add("mensagem-erro");
                 } finally {
                     botao.disabled = false;
@@ -907,7 +943,9 @@
                     });
 
                     if (!resposta.ok) {
-                        throw new Error("Não foi possível encerrar a sessão.");
+                        throw new Error(
+                            "Não foi possível encerrar a sessão."
+                        );
                     }
 
                     window.location.replace("/login.html");
