@@ -289,6 +289,12 @@
             resize: vertical;
         }
 
+        .campo small {
+            color: var(--cinza);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
         .mensagem-formulario {
             grid-column: 1 / -1;
             font-size: 14px;
@@ -531,14 +537,16 @@
                     </div>
 
                     <div class="campo campo-completo">
-                        <label for="imagemProduto">URL da imagem</label>
+                        <label for="imagemProduto">Imagem do produto</label>
                         <input
-                            type="url"
+                            type="file"
                             id="imagemProduto"
                             name="imagem"
-                            maxlength="2000"
-                            placeholder="https://exemplo.com/imagem.jpg"
+                            accept="image/jpeg,image/png,image/webp"
                         >
+                        <small>
+                            Formatos JPG, PNG ou WebP. Tamanho máximo: 4 MB.
+                        </small>
                     </div>
 
                     <div
@@ -764,15 +772,7 @@
                 const botao = document.getElementById("botaoCadastrar");
                 const mensagem = document.getElementById("mensagemProduto");
                 const dados = new FormData(formulario);
-
-                const produto = {
-                    nome: dados.get("nome").trim(),
-                    descricao: dados.get("descricao").trim(),
-                    preco: Number(dados.get("preco")),
-                    estoque: Number(dados.get("estoque")),
-                    categoria_id: Number(dados.get("categoria_id")),
-                    imagem: dados.get("imagem").trim() || null
-                };
+                const arquivo = document.getElementById("imagemProduto").files[0];
 
                 botao.disabled = true;
                 botao.textContent = "Cadastrando...";
@@ -780,6 +780,72 @@
                 mensagem.className = "mensagem-formulario";
 
                 try {
+                    let imagem = null;
+
+                    if (arquivo) {
+                        const tiposPermitidos = [
+                            "image/jpeg",
+                            "image/png",
+                            "image/webp"
+                        ];
+
+                        if (!tiposPermitidos.includes(arquivo.type)) {
+                            throw new Error(
+                                "Escolha uma imagem JPG, PNG ou WebP."
+                            );
+                        }
+
+                        if (
+                            arquivo.size === 0 ||
+                            arquivo.size > 4 * 1024 * 1024
+                        ) {
+                            throw new Error(
+                                "A imagem deve ter no máximo 4 MB."
+                            );
+                        }
+
+                        botao.textContent = "Enviando imagem...";
+
+                        const respostaUpload = await fetch(
+                            "/api/image",
+                            {
+                                method: "POST",
+                                credentials: "same-origin",
+                                headers: {
+                                    "Content-Type": arquivo.type
+                                },
+                                body: arquivo
+                            }
+                        );
+
+                        const resultadoUpload = await respostaUpload.json();
+
+                        if (respostaUpload.status === 401) {
+                            window.location.replace("/login.html");
+                            return;
+                        }
+
+                        if (!respostaUpload.ok || !resultadoUpload.url) {
+                            throw new Error(
+                                resultadoUpload.erro ||
+                                "Não foi possível enviar a imagem."
+                            );
+                        }
+
+                        imagem = resultadoUpload.url;
+                    }
+
+                    const produto = {
+                        nome: dados.get("nome").trim(),
+                        descricao: dados.get("descricao").trim(),
+                        preco: Number(dados.get("preco")),
+                        estoque: Number(dados.get("estoque")),
+                        categoria_id: Number(dados.get("categoria_id")),
+                        imagem
+                    };
+
+                    botao.textContent = "Salvando produto...";
+
                     const resposta = await fetch("/api/cadastrar-produto", {
                         method: "POST",
                         credentials: "same-origin",
@@ -798,12 +864,14 @@
 
                     if (!resposta.ok) {
                         throw new Error(
-                            resultado.erro || "Não foi possível cadastrar o produto."
+                            resultado.erro ||
+                            "Não foi possível cadastrar o produto."
                         );
                     }
 
                     mensagem.textContent =
-                        resultado.mensagem || "Produto cadastrado com sucesso!";
+                        resultado.mensagem ||
+                        "Produto cadastrado com sucesso!";
                     mensagem.classList.add("mensagem-sucesso");
 
                     formulario.reset();
@@ -813,7 +881,8 @@
                     console.error("Erro ao cadastrar produto:", erro);
 
                     mensagem.textContent =
-                        erro.message || "Ocorreu um erro ao cadastrar o produto.";
+                        erro.message ||
+                        "Ocorreu um erro ao cadastrar o produto.";
                     mensagem.classList.add("mensagem-erro");
                 } finally {
                     botao.disabled = false;
