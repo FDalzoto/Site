@@ -51,8 +51,8 @@ export default async function handler(req, res) {
         }
 
         const usuarioValido = compararSeguro(
-            usuario,
-            usuarioCorreto
+            usuario.trim(),
+            usuarioCorreto.trim()
         );
 
         const senhaValida = compararSeguro(
