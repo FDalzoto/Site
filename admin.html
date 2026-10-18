@@ -315,6 +315,94 @@
             grid-column: 1 / -1;
         }
 
+        /* Área de imagens */
+
+        .area-imagem {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 18px;
+            border: 1px dashed #a7c9b0;
+            border-radius: 12px;
+            background: #f8fbf8;
+        }
+
+        .botoes-imagem {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .botao-imagem {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border: 1px solid var(--verde);
+            border-radius: 8px;
+            background: white;
+            color: var(--verde-escuro);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .botao-imagem:hover {
+            background: var(--verde-claro);
+        }
+
+        .botao-imagem:focus-visible,
+        .botao-remover-imagem:focus-visible {
+            outline: 2px solid var(--verde);
+            outline-offset: 3px;
+        }
+
+        .input-imagem-escondido {
+            display: none !important;
+        }
+
+        .previa-imagem {
+            display: none;
+            width: 100%;
+            max-width: 320px;
+            padding: 10px;
+            border: 1px solid var(--borda);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .previa-imagem img {
+            display: block;
+            width: 100%;
+            max-height: 260px;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .nome-arquivo {
+            color: var(--cinza);
+            font-size: 12px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+            margin-top: 10px;
+        }
+
+        .botao-remover-imagem {
+            margin-top: 12px;
+            padding: 9px 12px;
+            border: 1px solid #fecaca;
+            border-radius: 7px;
+            background: white;
+            color: var(--vermelho);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .botao-remover-imagem:hover {
+            background: #fef2f2;
+        }
+
         .tabela-container {
             width: 100%;
             overflow-x: auto;
@@ -417,6 +505,14 @@
             .acoes-formulario {
                 grid-column: auto;
             }
+
+            .botoes-imagem {
+                flex-direction: column;
+            }
+
+            .botao-imagem {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -475,7 +571,7 @@
                 <div>
                     <h2>Cadastrar novo produto</h2>
                     <p class="secao-descricao">
-                        Preencha os dados para adicionar um produto ao catálogo.
+                        Preencha os dados e adicione uma foto ao catálogo.
                     </p>
                 </div>
 
@@ -537,16 +633,73 @@
                     </div>
 
                     <div class="campo campo-completo">
-                        <label for="imagemProduto">Imagem do produto</label>
-                        <input
-                            type="file"
-                            id="imagemProduto"
-                            name="imagem"
-                            accept="image/jpeg,image/png,image/webp"
-                        >
-                        <small>
-                            Formatos JPG, PNG ou WebP. Tamanho máximo: 4 MB.
-                        </small>
+                        <label>Foto do produto</label>
+
+                        <div class="area-imagem">
+                            <p class="secao-descricao">
+                                Tire uma foto do produto ou escolha uma imagem
+                                salva no seu dispositivo.
+                            </p>
+
+                            <div class="botoes-imagem">
+                                <button
+                                    type="button"
+                                    class="botao-imagem"
+                                    id="botaoCamera"
+                                >
+                                    📸 Tirar foto
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="botao-imagem"
+                                    id="botaoGaleria"
+                                >
+                                    🖼️ Escolher imagem
+                                </button>
+                            </div>
+
+                            <input
+                                type="file"
+                                id="imagemProduto"
+                                class="input-imagem-escondido"
+                                accept="image/jpeg,image/png,image/webp"
+                            >
+
+                            <input
+                                type="file"
+                                id="imagemCamera"
+                                class="input-imagem-escondido"
+                                accept="image/*"
+                                capture="environment"
+                            >
+
+                            <div id="previaImagem" class="previa-imagem">
+                                <img
+                                    id="imagemPreview"
+                                    alt="Pré-visualização do produto"
+                                >
+
+                                <p
+                                    id="nomeArquivo"
+                                    class="nome-arquivo"
+                                ></p>
+
+                                <button
+                                    type="button"
+                                    class="botao-remover-imagem"
+                                    id="botaoRemoverImagem"
+                                >
+                                    Remover foto
+                                </button>
+                            </div>
+
+                            <small>
+                                Formatos JPG, PNG ou WebP. Tamanho máximo:
+                                4 MB. A foto será enviada ao armazenamento
+                                do site quando você cadastrar o produto.
+                            </small>
+                        </div>
                     </div>
 
                     <div
@@ -765,6 +918,103 @@
             }
         }
 
+        /* Câmera, seleção de imagens e pré-visualização */
+
+        let arquivoImagemSelecionado = null;
+        let urlPreviaImagem = null;
+
+        const inputGaleria = document.getElementById("imagemProduto");
+        const inputCamera = document.getElementById("imagemCamera");
+        const botaoCamera = document.getElementById("botaoCamera");
+        const botaoGaleria = document.getElementById("botaoGaleria");
+        const botaoRemoverImagem =
+            document.getElementById("botaoRemoverImagem");
+        const previaImagem = document.getElementById("previaImagem");
+        const imagemPreview = document.getElementById("imagemPreview");
+        const nomeArquivo = document.getElementById("nomeArquivo");
+
+        botaoCamera.addEventListener("click", () => {
+            inputCamera.click();
+        });
+
+        botaoGaleria.addEventListener("click", () => {
+            inputGaleria.click();
+        });
+
+        function selecionarImagem(arquivo) {
+            if (!arquivo) {
+                return;
+            }
+
+            const tiposPermitidos = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+            if (!tiposPermitidos.includes(arquivo.type)) {
+                alert("Escolha uma imagem JPG, PNG ou WebP.");
+                return;
+            }
+
+            if (
+                arquivo.size === 0 ||
+                arquivo.size > 4 * 1024 * 1024
+            ) {
+                alert("A imagem deve ter no máximo 4 MB.");
+                return;
+            }
+
+            arquivoImagemSelecionado = arquivo;
+
+            if (urlPreviaImagem) {
+                URL.revokeObjectURL(urlPreviaImagem);
+            }
+
+            urlPreviaImagem = URL.createObjectURL(arquivo);
+
+            imagemPreview.src = urlPreviaImagem;
+            nomeArquivo.textContent = arquivo.name;
+            previaImagem.style.display = "block";
+        }
+
+        inputGaleria.addEventListener("change", () => {
+            const arquivo = inputGaleria.files[0];
+
+            selecionarImagem(arquivo);
+
+            // Permite escolher novamente o mesmo arquivo.
+            inputGaleria.value = "";
+        });
+
+        inputCamera.addEventListener("change", () => {
+            const arquivo = inputCamera.files[0];
+
+            selecionarImagem(arquivo);
+
+            // Mantém o arquivo selecionado em memória.
+            // Limpa o campo para permitir tirar outra foto.
+            inputCamera.value = "";
+        });
+
+        botaoRemoverImagem.addEventListener("click", () => {
+            arquivoImagemSelecionado = null;
+
+            inputGaleria.value = "";
+            inputCamera.value = "";
+
+            imagemPreview.removeAttribute("src");
+            nomeArquivo.textContent = "";
+            previaImagem.style.display = "none";
+
+            if (urlPreviaImagem) {
+                URL.revokeObjectURL(urlPreviaImagem);
+                urlPreviaImagem = null;
+            }
+        });
+
+        /* Cadastro de produtos */
+
         document.getElementById("formularioProduto").addEventListener(
             "submit",
             async function (evento) {
@@ -774,7 +1024,7 @@
                 const botao = document.getElementById("botaoCadastrar");
                 const mensagem = document.getElementById("mensagemProduto");
                 const dados = new FormData(formulario);
-                const arquivo = document.getElementById("imagemProduto").files[0];
+                const arquivo = arquivoImagemSelecionado;
 
                 botao.disabled = true;
                 botao.textContent = "Cadastrando...";
@@ -853,10 +1103,14 @@
                     }
 
                     const produto = {
-                        nome: String(dados.get("nome") || "").trim(),
+                        nome: String(
+                            dados.get("nome") || ""
+                        ).trim(),
+
                         descricao: String(
                             dados.get("descricao") || ""
                         ).trim(),
+
                         preco: Number(dados.get("preco")),
                         estoque: Number(dados.get("estoque")),
                         categoria_id: Number(dados.get("categoria_id")),
@@ -911,6 +1165,8 @@
 
                     formulario.reset();
 
+                    botaoRemoverImagem.click();
+
                     await carregarProdutos();
                 } catch (erro) {
                     console.error("Erro ao cadastrar produto:", erro);
@@ -926,6 +1182,8 @@
                 }
             }
         );
+
+        /* Encerrar sessão */
 
         document.getElementById("botaoSair").addEventListener(
             "click",
