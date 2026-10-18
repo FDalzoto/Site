@@ -14,7 +14,6 @@
         (async function protegerPainel() {
             try {
                 const resposta = await fetch("/api/verificar-sessao", {
-                    method: "GET",
                     credentials: "same-origin",
                     cache: "no-store"
                 });
@@ -180,13 +179,13 @@
             box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
         }
 
-        .card .rotulo {
+        .rotulo {
             font-size: 13px;
             color: var(--cinza);
             margin-bottom: 14px;
         }
 
-        .card .valor {
+        .valor {
             font-size: 30px;
             font-weight: 700;
             color: var(--verde-escuro);
@@ -197,6 +196,7 @@
             border: 1px solid var(--borda);
             border-radius: 14px;
             padding: 24px;
+            margin-bottom: 28px;
         }
 
         .secao-topo {
@@ -215,6 +215,7 @@
             color: var(--cinza);
             font-size: 13px;
             margin-top: 7px;
+            line-height: 1.5;
         }
 
         .botao {
@@ -238,6 +239,74 @@
         .sair:disabled {
             opacity: 0.6;
             cursor: wait;
+        }
+
+        .formulario-produto {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .campo-completo {
+            grid-column: 1 / -1;
+        }
+
+        .campo label {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .campo input,
+        .campo textarea,
+        .campo select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            background: white;
+            color: var(--texto);
+            font: inherit;
+            font-size: 14px;
+        }
+
+        .campo input:focus,
+        .campo textarea:focus,
+        .campo select:focus {
+            outline: 2px solid #86b99a;
+            border-color: var(--verde);
+        }
+
+        .campo textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .mensagem-formulario {
+            grid-column: 1 / -1;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .mensagem-sucesso {
+            color: var(--verde-escuro);
+        }
+
+        .mensagem-erro,
+        .erro {
+            color: var(--vermelho);
+        }
+
+        .acoes-formulario {
+            grid-column: 1 / -1;
         }
 
         .tabela-container {
@@ -271,15 +340,11 @@
             line-height: 1.7;
         }
 
-        .erro {
-            color: var(--vermelho);
-        }
-
         .rodape {
             text-align: center;
             color: var(--cinza);
             font-size: 12px;
-            padding: 24px 0 0;
+            padding: 0 0 24px;
         }
 
         @media (max-width: 900px) {
@@ -336,6 +401,16 @@
             .secao {
                 padding: 16px;
             }
+
+            .formulario-produto {
+                grid-template-columns: 1fr;
+            }
+
+            .campo-completo,
+            .mensagem-formulario,
+            .acoes-formulario {
+                grid-column: auto;
+            }
         }
     </style>
 </head>
@@ -352,7 +427,8 @@
                 <a href="produtos.html">Ver catálogo</a>
 
                 <div class="menu-titulo">Gerenciamento</div>
-                <a href="#produtos">Produtos</a>
+                <a href="#novo-produto">Cadastrar produto</a>
+                <a href="#produtos">Produtos cadastrados</a>
             </nav>
 
             <button type="button" class="sair" id="botaoSair">
@@ -389,6 +465,101 @@
                 </div>
             </section>
 
+            <section class="secao" id="novo-produto">
+                <div>
+                    <h2>Cadastrar novo produto</h2>
+                    <p class="secao-descricao">
+                        Preencha os dados para adicionar um produto ao catálogo.
+                    </p>
+                </div>
+
+                <form id="formularioProduto" class="formulario-produto">
+                    <div class="campo campo-completo">
+                        <label for="nomeProduto">Nome do produto *</label>
+                        <input
+                            type="text"
+                            id="nomeProduto"
+                            name="nome"
+                            maxlength="150"
+                            required
+                        >
+                    </div>
+
+                    <div class="campo campo-completo">
+                        <label for="descricaoProduto">Descrição</label>
+                        <textarea
+                            id="descricaoProduto"
+                            name="descricao"
+                            maxlength="2000"
+                        ></textarea>
+                    </div>
+
+                    <div class="campo">
+                        <label for="precoProduto">Preço (R$) *</label>
+                        <input
+                            type="number"
+                            id="precoProduto"
+                            name="preco"
+                            min="0.01"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+
+                    <div class="campo">
+                        <label for="estoqueProduto">Estoque *</label>
+                        <input
+                            type="number"
+                            id="estoqueProduto"
+                            name="estoque"
+                            min="0"
+                            step="1"
+                            value="0"
+                            required
+                        >
+                    </div>
+
+                    <div class="campo campo-completo">
+                        <label for="categoriaProduto">Categoria *</label>
+                        <select
+                            id="categoriaProduto"
+                            name="categoria_id"
+                            required
+                        >
+                            <option value="">Carregando categorias...</option>
+                        </select>
+                    </div>
+
+                    <div class="campo campo-completo">
+                        <label for="imagemProduto">URL da imagem</label>
+                        <input
+                            type="url"
+                            id="imagemProduto"
+                            name="imagem"
+                            maxlength="2000"
+                            placeholder="https://exemplo.com/imagem.jpg"
+                        >
+                    </div>
+
+                    <div
+                        id="mensagemProduto"
+                        class="mensagem-formulario"
+                        role="status"
+                        aria-live="polite"
+                    ></div>
+
+                    <div class="acoes-formulario">
+                        <button
+                            type="submit"
+                            class="botao"
+                            id="botaoCadastrar"
+                        >
+                            Cadastrar produto
+                        </button>
+                    </div>
+                </form>
+            </section>
+
             <section class="secao" id="produtos">
                 <div class="secao-topo">
                     <div>
@@ -423,9 +594,9 @@
                 </div>
             </section>
 
-            <div class="rodape">
+            <footer class="rodape">
                 Campos Gerais Pet Shop · Área administrativa
-            </div>
+            </footer>
         </main>
     </div>
 
@@ -443,12 +614,12 @@
                     cache: "no-store"
                 });
 
-                if (resposta.status === 401) {
-                    window.location.replace("/login.html");
-                    return;
-                }
-
                 if (!resposta.ok) {
+                    if (resposta.status === 401) {
+                        window.location.replace("/login.html");
+                        return;
+                    }
+
                     throw new Error("A API retornou um erro.");
                 }
 
@@ -461,15 +632,21 @@
                 total.textContent = produtos.length;
                 ativos.textContent = produtos.length;
                 status.textContent = "Conectada";
+                status.classList.remove("erro");
 
                 if (produtos.length === 0) {
-                    lista.innerHTML = `
-                        <tr>
-                            <td colspan="4" class="vazio">
-                                Nenhum produto encontrado no banco de dados.
-                            </td>
-                        </tr>
-                    `;
+                    lista.replaceChildren();
+
+                    const linha = document.createElement("tr");
+                    const celula = document.createElement("td");
+
+                    celula.colSpan = 4;
+                    celula.className = "vazio";
+                    celula.textContent =
+                        "Nenhum produto encontrado no banco de dados.";
+
+                    linha.appendChild(celula);
+                    lista.appendChild(linha);
                     return;
                 }
 
@@ -509,21 +686,147 @@
                 status.textContent = "Erro";
                 status.classList.add("erro");
 
-                lista.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="vazio">
-                            Não foi possível carregar os produtos.
-                            Verifique a conexão com a API.
-                        </td>
-                    </tr>
-                `;
+                lista.replaceChildren();
+
+                const linha = document.createElement("tr");
+                const celula = document.createElement("td");
+
+                celula.colSpan = 4;
+                celula.className = "vazio";
+                celula.textContent =
+                    "Não foi possível carregar os produtos. Verifique a API.";
+
+                linha.appendChild(celula);
+                lista.appendChild(linha);
             }
         }
+
+        async function carregarCategorias() {
+            const select = document.getElementById("categoriaProduto");
+
+            try {
+                const resposta = await fetch("/api/categorias", {
+                    method: "GET",
+                    credentials: "same-origin",
+                    cache: "no-store"
+                });
+
+                if (resposta.status === 401) {
+                    window.location.replace("/login.html");
+                    return;
+                }
+
+                if (!resposta.ok) {
+                    throw new Error("Não foi possível consultar as categorias.");
+                }
+
+                const categorias = await resposta.json();
+
+                if (!Array.isArray(categorias)) {
+                    throw new Error("Resposta de categorias inválida.");
+                }
+
+                select.replaceChildren();
+
+                const opcaoInicial = document.createElement("option");
+                opcaoInicial.value = "";
+                opcaoInicial.textContent = categorias.length
+                    ? "Selecione uma categoria"
+                    : "Nenhuma categoria cadastrada";
+
+                select.appendChild(opcaoInicial);
+
+                categorias.forEach((categoria) => {
+                    const opcao = document.createElement("option");
+                    opcao.value = categoria.id;
+                    opcao.textContent = categoria.nome;
+                    select.appendChild(opcao);
+                });
+            } catch (erro) {
+                console.error("Erro ao carregar categorias:", erro);
+
+                select.replaceChildren();
+
+                const opcao = document.createElement("option");
+                opcao.value = "";
+                opcao.textContent = "Erro ao carregar categorias";
+
+                select.appendChild(opcao);
+            }
+        }
+
+        document.getElementById("formularioProduto").addEventListener(
+            "submit",
+            async function (evento) {
+                evento.preventDefault();
+
+                const formulario = this;
+                const botao = document.getElementById("botaoCadastrar");
+                const mensagem = document.getElementById("mensagemProduto");
+                const dados = new FormData(formulario);
+
+                const produto = {
+                    nome: dados.get("nome").trim(),
+                    descricao: dados.get("descricao").trim(),
+                    preco: Number(dados.get("preco")),
+                    estoque: Number(dados.get("estoque")),
+                    categoria_id: Number(dados.get("categoria_id")),
+                    imagem: dados.get("imagem").trim() || null
+                };
+
+                botao.disabled = true;
+                botao.textContent = "Cadastrando...";
+                mensagem.textContent = "";
+                mensagem.className = "mensagem-formulario";
+
+                try {
+                    const resposta = await fetch("/api/cadastrar-produto", {
+                        method: "POST",
+                        credentials: "same-origin",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(produto)
+                    });
+
+                    const resultado = await resposta.json();
+
+                    if (resposta.status === 401) {
+                        window.location.replace("/login.html");
+                        return;
+                    }
+
+                    if (!resposta.ok) {
+                        throw new Error(
+                            resultado.erro || "Não foi possível cadastrar o produto."
+                        );
+                    }
+
+                    mensagem.textContent =
+                        resultado.mensagem || "Produto cadastrado com sucesso!";
+                    mensagem.classList.add("mensagem-sucesso");
+
+                    formulario.reset();
+
+                    await carregarProdutos();
+                } catch (erro) {
+                    console.error("Erro ao cadastrar produto:", erro);
+
+                    mensagem.textContent =
+                        erro.message || "Ocorreu um erro ao cadastrar o produto.";
+                    mensagem.classList.add("mensagem-erro");
+                } finally {
+                    botao.disabled = false;
+                    botao.textContent = "Cadastrar produto";
+                }
+            }
+        );
 
         document.getElementById("botaoSair").addEventListener(
             "click",
             async function () {
                 const botao = this;
+
                 botao.disabled = true;
                 botao.textContent = "Saindo...";
 
@@ -541,14 +844,17 @@
                     window.location.replace("/login.html");
                 } catch (erro) {
                     console.error("Erro ao sair:", erro);
+
                     botao.disabled = false;
                     botao.textContent = "↪ Sair do painel";
+
                     alert("Não foi possível sair. Tente novamente.");
                 }
             }
         );
 
         carregarProdutos();
+        carregarCategorias();
     </script>
 </body>
 </html>
