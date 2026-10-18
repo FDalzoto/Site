@@ -184,7 +184,7 @@ function renderProducts() {
     productGrid.querySelectorAll(".product-image").forEach(image => {
         image.addEventListener("error", () => {
             image.src =
-                "https://placehold.co/700x500/edf4ec/14532d?text=Produto";
+                "https://www.petlove.com.br/images/products/234533/product/Ra%C3%A7%C3%A3o_Seca_Dog_Excellence_Carne_e_Arroz_para_C%C3%A3es_Adultos_Ra%C3%A7as_Grandes_310118831_1.jpg?1770791350";
         }, { once: true });
     });
 
