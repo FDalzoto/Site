@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Login Administrativo | Campos Gerais Pet Shop</title>
+
+    <style>
+        :root {
+            --verde-escuro: #14532d;
+            --verde: #1f7a45;
+            --fundo: #f3f7f3;
+            --texto: #1f2937;
+            --cinza: #64748b;
+            --borda: #dbe5dc;
+            --branco: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--texto);
+            background:
+                radial-gradient(circle at top left, #dcefe0, transparent 40%),
+                var(--fundo);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .marca {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .icone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            border-radius: 20px;
+            background: var(--verde-escuro);
+            color: white;
+            font-size: 30px;
+        }
+
+        .marca h1 {
+            font-size: 23px;
+            color: var(--verde-escuro);
+            margin-bottom: 7px;
+        }
+
+        .marca p {
+            color: var(--cinza);
+            font-size: 14px;
+        }
+
+        .cartao {
+            padding: 32px;
+            border: 1px solid var(--borda);
+            border-radius: 18px;
+            background: var(--branco);
+            box-shadow: 0 16px 45px rgba(20, 83, 45, 0.08);
+        }
+
+        .cartao h2 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .descricao {
+            color: var(--cinza);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 26px;
+        }
+
+        .campo {
+            margin-bottom: 19px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid var(--borda);
+            border-radius: 9px;
+            outline: none;
+            font-size: 15px;
+            background: #fff;
+        }
+
+        input:focus {
+            border-color: var(--verde);
+            box-shadow: 0 0 0 3px rgba(31, 122, 69, 0.12);
+        }
+
+        .botao {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: var(--verde-escuro);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .botao:hover {
+            background: var(--verde);
+        }
+
+        .botao:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .mensagem {
+            display: none;
+            margin-top: 17px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .mensagem.erro {
+            display: block;
+            color: #991b1b;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .mensagem.sucesso {
+            display: block;
+            color: #166534;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .voltar {
+            display: block;
+            margin-top: 24px;
+            text-align: center;
+            color: var(--cinza);
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .voltar:hover {
+            color: var(--verde-escuro);
+        }
+
+        .rodape {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: var(--cinza);
+        }
+
+        @media (max-width: 480px) {
+            .cartao {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="login-container">
+        <header class="marca">
+            <div class="icone" aria-hidden="true">🐾</div>
+            <h1>Campos Gerais Pet Shop</h1>
+            <p>Área administrativa</p>
+        </header>
+
+        <section class="cartao">
+            <h2>Bem-vindo de volta</h2>
+            <p class="descricao">
+                Entre com suas credenciais para acessar o painel administrativo.
+            </p>
+
+            <form id="formLogin">
+                <div class="campo">
+                    <label for="usuario">Usuário</label>
+                    <input
+                        type="text"
+                        id="usuario"
+                        name="usuario"
+                        autocomplete="username"
+                        maxlength="200"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="senha">Senha</label>
+                    <input
+                        type="password"
+                        id="senha"
+                        name="senha"
+                        autocomplete="current-password"
+                        maxlength="200"
+                        required
+                    >
+                </div>
+
+                <button class="botao" id="botaoLogin" type="submit">
+                    Entrar no painel
+                </button>
+
+                <div
+                    class="mensagem"
+                    id="mensagem"
+                    role="status"
+                    aria-live="polite"
+                ></div>
+            </form>
+        </section>
+
+        <a class="voltar" href="index.html">
+            ← Voltar para o site
+        </a>
+
+        <footer class="rodape">
+            Campos Gerais Pet Shop · Acesso restrito
+        </footer>
+    </main>
+
+    <script>
+        const formulario = document.getElementById("formLogin");
+        const botao = document.getElementById("botaoLogin");
+        const mensagem = document.getElementById("mensagem");
+
+        formulario.addEventListener("submit", async (evento) => {
+            evento.preventDefault();
+
+            mensagem.className = "mensagem";
+            mensagem.textContent = "";
+
+            botao.disabled = true;
+            botao.textContent = "Verificando acesso...";
+
+            try {
+                const resposta = await fetch("/api/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "same-origin",
+                    body: JSON.stringify({
+                        usuario: document.getElementById("usuario").value,
+                        senha: document.getElementById("senha").value
+                    })
+                });
+
+                const resultado = await resposta.json();
+
+                if (!resposta.ok) {
+                    throw new Error(
+                        resultado.erro || "Não foi possível entrar."
+                    );
+                }
+
+                mensagem.className = "mensagem sucesso";
+                mensagem.textContent = "Login realizado! Abrindo o painel...";
+
+                window.location.href = "/admin.html";
+            } catch (erro) {
+                mensagem.className = "mensagem erro";
+                mensagem.textContent =
+                    erro.message || "Erro de conexão. Tente novamente.";
+            } finally {
+                botao.disabled = false;
+                botao.textContent = "Entrar no painel";
+            }
+        });
+    </script>
+</body>
+</html>
