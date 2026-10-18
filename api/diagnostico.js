@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     const nomes = [
         "DATABASE_URL",
         "POSTGRES_URL",
-        "POSTGRES_URL_NON_POOLING"
+        "PETSHOP_DATABASE_URL"
     ];
 
     const resultados = [];
