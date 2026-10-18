@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const conexao = neon(process.env.POSTGRES_URL_NON_POOLING);
+        const conexao = neon(process.env.PETSHOP_DATABASE_URL);
 
         const produtos = await conexao`
             SELECT
