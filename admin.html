@@ -51,8 +51,6 @@
             --branco: #ffffff;
             --vermelho: #b91c1c;
             --vermelho-claro: #fff1f2;
-            --amarelo: #92400e;
-            --amarelo-claro: #fef3c7;
         }
 
         * {
@@ -71,15 +69,11 @@
             color: var(--texto);
         }
 
-        button,
-        input,
-        textarea,
-        select {
+        button, input, textarea, select {
             font: inherit;
         }
 
-        button:focus-visible,
-        a:focus-visible {
+        button:focus-visible, a:focus-visible {
             outline: 2px solid #86b99a;
             outline-offset: 3px;
         }
@@ -160,7 +154,8 @@
         }
 
         .sair:disabled,
-        .botao:disabled {
+        .botao:disabled,
+        button:disabled {
             opacity: 0.6;
             cursor: wait;
         }
@@ -372,8 +367,7 @@
             color: var(--verde-escuro);
         }
 
-        .mensagem-erro,
-        .erro {
+        .mensagem-erro {
             color: var(--vermelho);
         }
 
@@ -419,11 +413,6 @@
 
         .botao-imagem:hover {
             background: var(--verde-claro);
-        }
-
-        .botao-imagem:disabled {
-            opacity: 0.6;
-            cursor: wait;
         }
 
         .input-imagem-escondido {
@@ -484,8 +473,7 @@
             text-align: left;
         }
 
-        th,
-        td {
+        th, td {
             padding: 16px 12px;
             border-bottom: 1px solid var(--borda);
             font-size: 13px;
@@ -605,6 +593,156 @@
             flex: 1;
         }
 
+        /* Modal de exclusão personalizado */
+
+        .modal-exclusao {
+            position: fixed;
+            inset: 0;
+            z-index: 100000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.68);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-exclusao[hidden],
+        .notificacao-painel[hidden] {
+            display: none !important;
+        }
+
+        .caixa-exclusao {
+            width: 100%;
+            max-width: 430px;
+            padding: 32px;
+            border-radius: 18px;
+            background: white;
+            text-align: center;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+            animation: modalEntrada 0.22s ease-out;
+        }
+
+        .icone-exclusao {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #fff1f2;
+            color: #b91c1c;
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .caixa-exclusao h2 {
+            margin-bottom: 14px;
+            color: var(--verde-escuro);
+            font-size: 23px;
+        }
+
+        .caixa-exclusao p {
+            color: var(--cinza);
+            font-size: 14px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        #descricaoExclusao strong {
+            color: var(--verde-escuro);
+        }
+
+        .caixa-exclusao .aviso-exclusao {
+            margin-top: 12px;
+            margin-bottom: 26px;
+            color: var(--vermelho);
+            font-size: 12px;
+        }
+
+        .botoes-exclusao {
+            display: flex;
+            gap: 12px;
+        }
+
+        .botoes-exclusao button {
+            flex: 1;
+            min-height: 46px;
+            padding: 12px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .botoes-exclusao button:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-cancelar-exclusao {
+            border: 1px solid var(--borda);
+            background: #f8fafc;
+            color: #334155;
+        }
+
+        .btn-cancelar-exclusao:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-confirmar-exclusao {
+            border: 1px solid #b91c1c;
+            background: #b91c1c;
+            color: white;
+        }
+
+        .btn-confirmar-exclusao:hover {
+            background: #991b1b;
+        }
+
+        .botoes-exclusao button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+            transform: none;
+        }
+
+        /* Notificações personalizadas */
+
+        .notificacao-painel {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 100001;
+            max-width: min(420px, calc(100vw - 32px));
+            padding: 16px 20px;
+            border-radius: 12px;
+            background: #14532d;
+            color: white;
+            font-size: 14px;
+            line-height: 1.6;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+            overflow-wrap: anywhere;
+            animation: modalEntrada 0.2s ease-out;
+        }
+
+        .notificacao-painel.erro {
+            background: #b91c1c;
+            color: white;
+        }
+
+        @keyframes modalEntrada {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
         /* Rodapé */
 
         .rodape {
@@ -697,6 +835,19 @@
             .acoes-produto {
                 min-width: 140px;
             }
+
+            .caixa-exclusao {
+                padding: 25px 20px;
+            }
+
+            .botoes-exclusao {
+                flex-direction: column-reverse;
+            }
+
+            .notificacao-painel {
+                right: 16px;
+                bottom: 16px;
+            }
         }
     </style>
 </head>
@@ -762,56 +913,31 @@
                 <form id="formularioProduto" class="formulario-produto">
                     <div class="campo campo-completo">
                         <label for="nomeProduto">Nome do produto *</label>
-                        <input
-                            type="text"
-                            id="nomeProduto"
-                            name="nome"
-                            maxlength="150"
-                            required
-                        >
+                        <input type="text" id="nomeProduto" name="nome"
+                               maxlength="150" required>
                     </div>
 
                     <div class="campo campo-completo">
                         <label for="descricaoProduto">Descrição</label>
-                        <textarea
-                            id="descricaoProduto"
-                            name="descricao"
-                            maxlength="2000"
-                        ></textarea>
+                        <textarea id="descricaoProduto" name="descricao"
+                                  maxlength="2000"></textarea>
                     </div>
 
                     <div class="campo">
                         <label for="precoProduto">Preço (R$) *</label>
-                        <input
-                            type="number"
-                            id="precoProduto"
-                            name="preco"
-                            min="0.01"
-                            step="0.01"
-                            required
-                        >
+                        <input type="number" id="precoProduto" name="preco"
+                               min="0.01" step="0.01" required>
                     </div>
 
                     <div class="campo">
                         <label for="estoqueProduto">Estoque *</label>
-                        <input
-                            type="number"
-                            id="estoqueProduto"
-                            name="estoque"
-                            min="0"
-                            step="1"
-                            value="0"
-                            required
-                        >
+                        <input type="number" id="estoqueProduto" name="estoque"
+                               min="0" step="1" value="0" required>
                     </div>
 
                     <div class="campo campo-completo">
                         <label for="categoriaProduto">Categoria *</label>
-                        <select
-                            id="categoriaProduto"
-                            name="categoria_id"
-                            required
-                        >
+                        <select id="categoriaProduto" name="categoria_id" required>
                             <option value="">Carregando categorias...</option>
                         </select>
                     </div>
@@ -826,51 +952,34 @@
                             </p>
 
                             <div class="botoes-imagem">
-                                <button
-                                    type="button"
-                                    class="botao-imagem"
-                                    id="botaoCamera"
-                                >
+                                <button type="button" class="botao-imagem"
+                                        id="botaoCamera">
                                     📸 Tirar foto
                                 </button>
 
-                                <button
-                                    type="button"
-                                    class="botao-imagem"
-                                    id="botaoGaleria"
-                                >
+                                <button type="button" class="botao-imagem"
+                                        id="botaoGaleria">
                                     🖼️ Escolher imagem
                                 </button>
                             </div>
 
-                            <input
-                                type="file"
-                                id="imagemProduto"
-                                class="input-imagem-escondido"
-                                accept="image/jpeg,image/png,image/webp"
-                            >
+                            <input type="file" id="imagemProduto"
+                                   class="input-imagem-escondido"
+                                   accept="image/jpeg,image/png,image/webp">
 
-                            <input
-                                type="file"
-                                id="imagemCamera"
-                                class="input-imagem-escondido"
-                                accept="image/*"
-                                capture="environment"
-                            >
+                            <input type="file" id="imagemCamera"
+                                   class="input-imagem-escondido"
+                                   accept="image/*" capture="environment">
 
                             <div id="previaImagem" class="previa-imagem">
-                                <img
-                                    id="imagemPreview"
-                                    alt="Pré-visualização do produto"
-                                >
+                                <img id="imagemPreview"
+                                     alt="Pré-visualização do produto">
 
                                 <p id="nomeArquivo" class="nome-arquivo"></p>
 
-                                <button
-                                    type="button"
-                                    class="botao-remover-imagem"
-                                    id="botaoRemoverImagem"
-                                >
+                                <button type="button"
+                                        class="botao-remover-imagem"
+                                        id="botaoRemoverImagem">
                                     Remover foto
                                 </button>
                             </div>
@@ -883,28 +992,17 @@
                         </div>
                     </div>
 
-                    <div
-                        id="mensagemProduto"
-                        class="mensagem-formulario"
-                        role="status"
-                        aria-live="polite"
-                    ></div>
+                    <div id="mensagemProduto"
+                         class="mensagem-formulario"
+                         role="status" aria-live="polite"></div>
 
                     <div class="acoes-formulario">
-                        <button
-                            type="submit"
-                            class="botao"
-                            id="botaoCadastrar"
-                        >
+                        <button type="submit" class="botao" id="botaoCadastrar">
                             Cadastrar produto
                         </button>
 
-                        <button
-                            type="button"
-                            class="botao-secundario"
-                            id="botaoCancelarEdicao"
-                            hidden
-                        >
+                        <button type="button" class="botao-secundario"
+                                id="botaoCancelarEdicao" hidden>
                             Cancelar edição
                         </button>
                     </div>
@@ -921,7 +1019,8 @@
                     </div>
 
                     <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                        <button type="button" class="botao-secundario" id="botaoAtualizar">
+                        <button type="button" class="botao-secundario"
+                                id="botaoAtualizar">
                             ↻ Atualizar lista
                         </button>
 
@@ -958,7 +1057,7 @@
         </main>
     </div>
 
-    <!-- Janela da câmera -->
+    <!-- Modal da câmera -->
     <div id="modalCamera" class="modal-camera" hidden>
         <div class="conteudo-camera">
             <h2>Tirar foto do produto</h2>
@@ -979,6 +1078,47 @@
         </div>
     </div>
 
+    <!-- Modal personalizado de exclusão -->
+    <div id="modalExclusao" class="modal-exclusao" hidden>
+        <div class="caixa-exclusao"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="tituloExclusao"
+             aria-describedby="descricaoExclusao">
+
+            <div class="icone-exclusao" aria-hidden="true">!</div>
+
+            <h2 id="tituloExclusao">Excluir produto?</h2>
+
+            <p id="descricaoExclusao">
+                Tem certeza de que deseja excluir este produto?
+            </p>
+
+            <p class="aviso-exclusao">
+                Essa ação não poderá ser desfeita.
+            </p>
+
+            <div class="botoes-exclusao">
+                <button type="button" id="cancelarExclusao"
+                        class="btn-cancelar-exclusao">
+                    Cancelar
+                </button>
+
+                <button type="button" id="confirmarExclusao"
+                        class="btn-confirmar-exclusao">
+                    Sim, excluir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificações personalizadas -->
+    <div id="notificacaoPainel"
+         class="notificacao-painel"
+         role="status"
+         aria-live="polite"
+         hidden></div>
+
     <script>
         /* Estado do painel */
 
@@ -989,6 +1129,10 @@
         let arquivoImagemSelecionado = null;
         let urlPreviaImagem = null;
         let fluxoCamera = null;
+
+        let produtoPendenteExclusao = null;
+        let temporizadorNotificacao = null;
+        let focoAnteriorExclusao = null;
 
         const formularioProduto =
             document.getElementById("formularioProduto");
@@ -1047,7 +1191,38 @@
         const mensagemProduto =
             document.getElementById("mensagemProduto");
 
-        /* Mensagens */
+        const modalExclusao =
+            document.getElementById("modalExclusao");
+
+        const descricaoExclusao =
+            document.getElementById("descricaoExclusao");
+
+        const cancelarExclusao =
+            document.getElementById("cancelarExclusao");
+
+        const confirmarExclusao =
+            document.getElementById("confirmarExclusao");
+
+        const notificacaoPainel =
+            document.getElementById("notificacaoPainel");
+
+        /* Notificações sem alert() */
+
+        function mostrarNotificacao(texto, tipo = "sucesso") {
+            clearTimeout(temporizadorNotificacao);
+
+            notificacaoPainel.textContent = texto;
+            notificacaoPainel.classList.toggle(
+                "erro",
+                tipo === "erro"
+            );
+
+            notificacaoPainel.hidden = false;
+
+            temporizadorNotificacao = setTimeout(() => {
+                notificacaoPainel.hidden = true;
+            }, 4500);
+        }
 
         function mostrarMensagem(texto, tipo) {
             mensagemProduto.textContent = texto;
@@ -1072,7 +1247,7 @@
             }
         }
 
-        /* Produtos */
+        /* Carregar produtos */
 
         async function carregarProdutos() {
             const lista = document.getElementById("listaProdutos");
@@ -1096,7 +1271,7 @@
                     throw new Error("Não foi possível carregar os produtos.");
                 }
 
-                const produtos = await resposta.json();
+                const produtos = await lerRespostaJson(resposta);
 
                 if (!Array.isArray(produtos)) {
                     throw new Error("A resposta da API é inválida.");
@@ -1161,11 +1336,14 @@
                     }
 
                     const acoes = document.createElement("td");
-                    const containerAcoes = document.createElement("div");
+                    const containerAcoes =
+                        document.createElement("div");
 
                     containerAcoes.className = "acoes-produto";
 
-                    const botaoEditar = document.createElement("button");
+                    const botaoEditar =
+                        document.createElement("button");
+
                     botaoEditar.type = "button";
                     botaoEditar.className = "botao-editar";
                     botaoEditar.textContent = "Editar";
@@ -1174,7 +1352,9 @@
                         editarProduto(produto.id);
                     });
 
-                    const botaoExcluir = document.createElement("button");
+                    const botaoExcluir =
+                        document.createElement("button");
+
                     botaoExcluir.type = "button";
                     botaoExcluir.className = "botao-excluir";
                     botaoExcluir.textContent = "Excluir";
@@ -1224,10 +1404,11 @@
             carregarProdutos
         );
 
-        /* Categorias */
+        /* Carregar categorias */
 
         async function carregarCategorias() {
-            const select = document.getElementById("categoriaProduto");
+            const select =
+                document.getElementById("categoriaProduto");
 
             try {
                 const resposta = await fetch("/api/categorias", {
@@ -1247,7 +1428,7 @@
                     );
                 }
 
-                const categorias = await resposta.json();
+                const categorias = await lerRespostaJson(resposta);
 
                 if (!Array.isArray(categorias)) {
                     throw new Error("Resposta de categorias inválida.");
@@ -1282,7 +1463,7 @@
             }
         }
 
-        /* Imagens e pré-visualização */
+        /* Seleção e pré-visualização de imagens */
 
         function liberarPreviaImagem() {
             if (urlPreviaImagem) {
@@ -1292,9 +1473,7 @@
         }
 
         function selecionarImagem(arquivo) {
-            if (!arquivo) {
-                return;
-            }
+            if (!arquivo) return;
 
             const tiposPermitidos = [
                 "image/jpeg",
@@ -1303,15 +1482,18 @@
             ];
 
             if (!tiposPermitidos.includes(arquivo.type)) {
-                alert("Escolha uma imagem JPG, PNG ou WebP.");
+                mostrarNotificacao(
+                    "Escolha uma imagem JPG, PNG ou WebP.",
+                    "erro"
+                );
                 return;
             }
 
-            if (
-                arquivo.size === 0 ||
-                arquivo.size > 4 * 1024 * 1024
-            ) {
-                alert("A imagem deve ter no máximo 4 MB.");
+            if (arquivo.size === 0 || arquivo.size > 4 * 1024 * 1024) {
+                mostrarNotificacao(
+                    "A imagem deve ter no máximo 4 MB.",
+                    "erro"
+                );
                 return;
             }
 
@@ -1321,6 +1503,7 @@
 
             urlPreviaImagem = URL.createObjectURL(arquivo);
             imagemPreview.src = urlPreviaImagem;
+
             nomeArquivo.textContent =
                 arquivo.name || "Foto do produto";
 
@@ -1368,21 +1551,21 @@
                 erroCamera.textContent =
                     "A câmera não está disponível neste navegador. " +
                     "Verifique se está usando HTTPS ou escolha uma imagem salva.";
-
                 return;
             }
 
             botaoCamera.disabled = true;
 
             try {
-                fluxoCamera = await navigator.mediaDevices.getUserMedia({
-                    audio: false,
-                    video: {
-                        facingMode: { ideal: "environment" },
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    }
-                });
+                fluxoCamera =
+                    await navigator.mediaDevices.getUserMedia({
+                        audio: false,
+                        video: {
+                            facingMode: { ideal: "environment" },
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        }
+                    });
 
                 videoCamera.srcObject = fluxoCamera;
                 await videoCamera.play();
@@ -1435,12 +1618,6 @@
             }
         });
 
-        document.addEventListener("keydown", evento => {
-            if (evento.key === "Escape" && !modalCamera.hidden) {
-                fecharCameraModal();
-            }
-        });
-
         capturarFoto.addEventListener("click", async () => {
             if (!videoCamera.videoWidth || !videoCamera.videoHeight) {
                 erroCamera.textContent =
@@ -1467,7 +1644,9 @@
                 const contexto = canvas.getContext("2d");
 
                 if (!contexto) {
-                    throw new Error("Não foi possível preparar a imagem.");
+                    throw new Error(
+                        "Não foi possível preparar a imagem."
+                    );
                 }
 
                 contexto.drawImage(
@@ -1518,7 +1697,7 @@
             }
         });
 
-        /* Preparar formulário para edição */
+        /* Editar produto */
 
         function editarProduto(id) {
             const produto = produtosCarregados.find(
@@ -1526,8 +1705,9 @@
             );
 
             if (!produto) {
-                alert(
-                    "Não foi possível localizar o produto. Atualize a lista."
+                mostrarNotificacao(
+                    "Não foi possível localizar o produto. Atualize a lista.",
+                    "erro"
                 );
                 return;
             }
@@ -1614,35 +1794,104 @@
             cancelarEdicao
         );
 
-        /* Excluir produto */
+        /* Modal personalizado de exclusão */
 
-        async function excluirProduto(id, nome) {
-            const confirmar = window.confirm(
-                `Deseja realmente excluir "${nome}" do catálogo?`
+        function abrirModalExclusao(id, nome) {
+            produtoPendenteExclusao = {
+                id: Number(id),
+                nome: String(nome || "este produto")
+            };
+
+            focoAnteriorExclusao = document.activeElement;
+
+            descricaoExclusao.replaceChildren();
+
+            descricaoExclusao.append(
+                document.createTextNode(
+                    "Tem certeza de que deseja excluir "
+                )
             );
 
-            if (!confirmar) {
+            const nomeElemento = document.createElement("strong");
+            nomeElemento.textContent = produtoPendenteExclusao.nome;
+
+            descricaoExclusao.append(
+                nomeElemento,
+                document.createTextNode(" do catálogo?")
+            );
+
+            confirmarExclusao.disabled = false;
+            cancelarExclusao.disabled = false;
+            confirmarExclusao.textContent = "Sim, excluir";
+
+            modalExclusao.hidden = false;
+            cancelarExclusao.focus();
+        }
+
+        function fecharModalExclusao() {
+            if (!modalExclusao.hidden && confirmarExclusao.disabled) {
                 return;
             }
+
+            modalExclusao.hidden = true;
+            produtoPendenteExclusao = null;
+
+            confirmarExclusao.disabled = false;
+            cancelarExclusao.disabled = false;
+            confirmarExclusao.textContent = "Sim, excluir";
+
+            if (focoAnteriorExclusao?.isConnected) {
+                focoAnteriorExclusao.focus();
+            }
+        }
+
+        cancelarExclusao.addEventListener(
+            "click",
+            fecharModalExclusao
+        );
+
+        modalExclusao.addEventListener("click", evento => {
+            if (evento.target === modalExclusao) {
+                fecharModalExclusao();
+            }
+        });
+
+        document.addEventListener("keydown", evento => {
+            if (evento.key === "Escape" && !modalExclusao.hidden) {
+                fecharModalExclusao();
+            }
+        });
+
+        async function excluirProduto(id, nome) {
+            abrirModalExclusao(id, nome);
+        }
+
+        confirmarExclusao.addEventListener("click", async () => {
+            if (!produtoPendenteExclusao) return;
+
+            const id = produtoPendenteExclusao.id;
+
+            confirmarExclusao.disabled = true;
+            cancelarExclusao.disabled = true;
+            confirmarExclusao.textContent = "Excluindo...";
 
             try {
                 const resposta = await fetch("/api/excluir-produto", {
                     method: "DELETE",
                     credentials: "same-origin",
+                    cache: "no-store",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({
-                        id: Number(id)
-                    })
+                    body: JSON.stringify({ id })
                 });
-
-                const resultado = await lerRespostaJson(resposta);
 
                 if (resposta.status === 401) {
                     window.location.replace("/login.html");
                     return;
                 }
+
+                const resultado = await lerRespostaJson(resposta);
 
                 if (!resposta.ok) {
                     throw new Error(
@@ -1651,25 +1900,41 @@
                     );
                 }
 
-                if (Number(produtoEmEdicao) === Number(id)) {
+                if (Number(produtoEmEdicao) === id) {
                     cancelarEdicao();
                 }
 
+                modalExclusao.hidden = true;
+                produtoPendenteExclusao = null;
+
+                confirmarExclusao.disabled = false;
+                cancelarExclusao.disabled = false;
+                confirmarExclusao.textContent = "Sim, excluir";
+
+                mostrarNotificacao(
+                    resultado.mensagem ||
+                    "Produto excluído do catálogo com sucesso!"
+                );
+
                 await carregarProdutos();
 
-                alert(
-                    resultado.mensagem ||
-                    "Produto excluído do catálogo com sucesso."
-                );
+                if (focoAnteriorExclusao?.isConnected) {
+                    focoAnteriorExclusao.focus();
+                }
             } catch (erro) {
                 console.error("Erro ao excluir produto:", erro);
 
-                alert(
+                confirmarExclusao.disabled = false;
+                cancelarExclusao.disabled = false;
+                confirmarExclusao.textContent = "Tentar novamente";
+
+                mostrarNotificacao(
                     erro.message ||
-                    "Ocorreu um erro ao excluir o produto."
+                    "Ocorreu um erro ao excluir o produto.",
+                    "erro"
                 );
             }
-        }
+        });
 
         /* Enviar imagem para o armazenamento */
 
@@ -1681,13 +1946,12 @@
             ];
 
             if (!tiposPermitidos.includes(arquivo.type)) {
-                throw new Error("Escolha uma imagem JPG, PNG ou WebP.");
+                throw new Error(
+                    "Escolha uma imagem JPG, PNG ou WebP."
+                );
             }
 
-            if (
-                arquivo.size === 0 ||
-                arquivo.size > 4 * 1024 * 1024
-            ) {
+            if (arquivo.size === 0 || arquivo.size > 4 * 1024 * 1024) {
                 throw new Error("A imagem deve ter no máximo 4 MB.");
             }
 
@@ -1702,14 +1966,17 @@
 
             if (resposta.status === 401) {
                 window.location.replace("/login.html");
-                throw new Error("Sua sessão expirou. Entre novamente.");
+                throw new Error(
+                    "Sua sessão expirou. Entre novamente."
+                );
             }
 
             const resultado = await lerRespostaJson(resposta);
 
             if (!resposta.ok || !resultado.url) {
                 throw new Error(
-                    resultado.erro || "Não foi possível enviar a imagem."
+                    resultado.erro ||
+                    "Não foi possível enviar a imagem."
                 );
             }
 
@@ -1744,6 +2011,7 @@
 
             botaoCadastrar.disabled = true;
             botaoCancelarEdicao.disabled = true;
+
             botaoCadastrar.textContent = arquivo
                 ? "Enviando imagem..."
                 : "Salvando...";
@@ -1761,7 +2029,9 @@
 
                 const produto = {
                     nome: String(dados.get("nome") || "").trim(),
-                    descricao: String(dados.get("descricao") || "").trim(),
+                    descricao: String(
+                        dados.get("descricao") || ""
+                    ).trim(),
                     preco: Number(dados.get("preco")),
                     estoque: Number(dados.get("estoque")),
                     categoria_id: Number(dados.get("categoria_id")),
@@ -1832,11 +2102,10 @@
                 botaoCadastrar.disabled = false;
                 botaoCancelarEdicao.disabled = false;
 
-                if (produtoEmEdicao !== null) {
-                    botaoCadastrar.textContent = "Salvar alterações";
-                } else {
-                    botaoCadastrar.textContent = "Cadastrar produto";
-                }
+                botaoCadastrar.textContent =
+                    produtoEmEdicao !== null
+                        ? "Salvar alterações"
+                        : "Cadastrar produto";
             }
         });
 
@@ -1870,8 +2139,9 @@
                     botao.disabled = false;
                     botao.textContent = "↪ Sair do painel";
 
-                    alert(
-                        "Não foi possível sair. Tente novamente."
+                    mostrarNotificacao(
+                        "Não foi possível sair. Tente novamente.",
+                        "erro"
                     );
                 }
             }
