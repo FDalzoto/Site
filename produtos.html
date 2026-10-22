@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -13,9 +12,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="style.css">
 
     <script>
@@ -359,11 +356,6 @@
             gap: 23px;
         }
 
-        /*
-          Os cartões são renderizados pelo produtos.js.
-          Estas regras padronizam os cartões mais comuns sem
-          alterar os IDs ou a lógica do catálogo.
-        */
         .product-grid > * {
             min-width: 0;
         }
@@ -501,28 +493,19 @@
             bottom: 22px;
             display: inline-flex;
             align-items: center;
-            gap: 9px;
-            padding: 14px 19px;
+            justify-content: center;
+            padding: 14px 18px;
             border-radius: 999px;
-            background: #18764a;
+            background: #25d366;
             color: white;
             font-size: 14px;
             font-weight: 700;
             text-decoration: none;
-            box-shadow: 0 10px 28px rgba(12, 65, 39, .25);
-            transition: transform .2s, background .2s;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, .15);
         }
 
         .whatsapp-float:hover {
-            transform: translateY(-3px);
-            background: #125c39;
-        }
-
-        a:focus-visible,
-        button:focus-visible,
-        input:focus-visible {
-            outline: 3px solid var(--accent);
-            outline-offset: 4px;
+            background: #1da851;
         }
 
         @media (max-width: 900px) {
@@ -633,10 +616,16 @@
                     Fale conosco
                 </a>
 
-                <a class="admin-nav-button" href="login.html">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round" aria-hidden="true">
+                <a class="admin-nav-button"
+                   href="login.html"
+                   id="botaoAreaRestrita">
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
                         <rect x="3" y="11" width="18" height="11" rx="2"></rect>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                     </svg>
@@ -694,12 +683,33 @@
                     placeholder="Digite o nome de um produto..."
                     autocomplete="off">
 
-                <div class="category-filters" id="category-filters" aria-label="Filtrar produtos por categoria">
-                    <button class="category-button active" data-category="Todos" type="button" aria-pressed="true">Todos</button>
-                    <button class="category-button" data-category="Cães" type="button" aria-pressed="false">Cães</button>
-                    <button class="category-button" data-category="Gatos" type="button" aria-pressed="false">Gatos</button>
-                    <button class="category-button" data-category="Acessórios" type="button" aria-pressed="false">Acessórios</button>
-                    <button class="category-button" data-category="Higiene" type="button" aria-pressed="false">Higiene</button>
+                <div class="category-filters"
+                     id="category-filters"
+                     aria-label="Filtrar produtos por categoria">
+                    <button class="category-button active"
+                            data-category="Todos"
+                            type="button"
+                            aria-pressed="true">Todos</button>
+
+                    <button class="category-button"
+                            data-category="Cães"
+                            type="button"
+                            aria-pressed="false">Cães</button>
+
+                    <button class="category-button"
+                            data-category="Gatos"
+                            type="button"
+                            aria-pressed="false">Gatos</button>
+
+                    <button class="category-button"
+                            data-category="Acessórios"
+                            type="button"
+                            aria-pressed="false">Acessórios</button>
+
+                    <button class="category-button"
+                            data-category="Higiene"
+                            type="button"
+                            aria-pressed="false">Higiene</button>
                 </div>
 
                 <div class="product-grid" id="product-grid" aria-live="polite"></div>
@@ -718,7 +728,10 @@
                         </p>
                     </div>
 
-                    <button class="button button-primary" id="send-order" type="button" disabled>
+                    <button class="button button-primary"
+                            id="send-order"
+                            type="button"
+                            disabled>
                         Enviar pedido pelo WhatsApp
                     </button>
                 </div>
@@ -791,7 +804,49 @@
         WhatsApp
     </a>
 
+    <!-- Script responsável pelo catálogo e pelo carrinho -->
     <script src="produtos.js"></script>
+
+    <!-- Verificação da sessão da área administrativa -->
+    <script>
+        const botaoAreaRestrita = document.getElementById("botaoAreaRestrita");
+
+        if (botaoAreaRestrita) {
+            botaoAreaRestrita.addEventListener("click", async function (evento) {
+                evento.preventDefault();
+
+                if (botaoAreaRestrita.dataset.verificando === "true") {
+                    return;
+                }
+
+                botaoAreaRestrita.dataset.verificando = "true";
+                botaoAreaRestrita.setAttribute("aria-busy", "true");
+
+                try {
+                    const resposta = await fetch("/api/verificar-sessao", {
+                        method: "GET",
+                        credentials: "same-origin",
+                        cache: "no-store"
+                    });
+
+                    if (!resposta.ok) {
+                        window.location.href = "login.html";
+                        return;
+                    }
+
+                    const resultado = await resposta.json();
+
+                    if (resultado.autenticado === true) {
+                        window.location.href = "admin.html";
+                    } else {
+                        window.location.href = "login.html";
+                    }
+                } catch (erro) {
+                    window.location.href = "login.html";
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

@@ -521,7 +521,10 @@
                     Fale conosco
                 </a>
 
-                <a class="admin-nav-button" href="login.html">
+                <!-- Botão atualizado para verificar a sessão -->
+                <a class="admin-nav-button"
+                   href="login.html"
+                   id="botaoAreaRestrita">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
                          stroke-width="2" stroke-linecap="round"
                          stroke-linejoin="round" aria-hidden="true">
@@ -708,6 +711,46 @@
         target="_blank">
         WhatsApp
     </a>
+
+    <!-- Verificação de autenticação da área administrativa -->
+    <script>
+        const botaoAreaRestrita = document.getElementById("botaoAreaRestrita");
+
+        if (botaoAreaRestrita) {
+            botaoAreaRestrita.addEventListener("click", async function (evento) {
+                evento.preventDefault();
+
+                if (botaoAreaRestrita.dataset.verificando === "true") {
+                    return;
+                }
+
+                botaoAreaRestrita.dataset.verificando = "true";
+                botaoAreaRestrita.setAttribute("aria-busy", "true");
+
+                try {
+                    const resposta = await fetch("/api/verificar-sessao", {
+                        method: "GET",
+                        credentials: "same-origin",
+                        cache: "no-store"
+                    });
+
+                    if (!resposta.ok) {
+                        window.location.href = "login.html";
+                        return;
+                    }
+
+                    const resultado = await resposta.json();
+
+                    window.location.href = resultado.autenticado === true
+                        ? "admin.html"
+                        : "login.html";
+
+                } catch (erro) {
+                    window.location.href = "login.html";
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
