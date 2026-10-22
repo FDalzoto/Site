@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,11 +69,15 @@
             color: var(--texto);
         }
 
-        button, input, textarea, select {
+        button,
+        input,
+        textarea,
+        select {
             font: inherit;
         }
 
-        button:focus-visible, a:focus-visible {
+        button:focus-visible,
+        a:focus-visible {
             outline: 2px solid #86b99a;
             outline-offset: 3px;
         }
@@ -473,7 +477,8 @@
             text-align: left;
         }
 
-        th, td {
+        th,
+        td {
             padding: 16px 12px;
             border-bottom: 1px solid var(--borda);
             font-size: 13px;
@@ -849,6 +854,30 @@
                 bottom: 16px;
             }
         }
+
+
+        /* Botão para voltar à loja */
+
+        .voltar-loja {
+            display: block;
+            width: 100%;
+            margin-top: auto;
+            margin-bottom: 12px;
+            padding: 13px 12px;
+            border: 1px solid #568365;
+            border-radius: 8px;
+            background: transparent;
+            color: white;
+            text-align: left;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .voltar-loja:hover {
+            background: #246b3d;
+        }
     </style>
 </head>
 
@@ -867,6 +896,11 @@
                 <a href="#novo-produto">Cadastrar produto</a>
                 <a href="#produtos">Produtos cadastrados</a>
             </nav>
+
+            <a href="index.html" class="voltar-loja">
+                ← Voltar para a loja
+            </a>
+
 
             <button type="button" class="sair" id="botaoSair">
                 ↪ Sair do painel
@@ -913,26 +947,22 @@
                 <form id="formularioProduto" class="formulario-produto">
                     <div class="campo campo-completo">
                         <label for="nomeProduto">Nome do produto *</label>
-                        <input type="text" id="nomeProduto" name="nome"
-                               maxlength="150" required>
+                        <input type="text" id="nomeProduto" name="nome" maxlength="150" required>
                     </div>
 
                     <div class="campo campo-completo">
                         <label for="descricaoProduto">Descrição</label>
-                        <textarea id="descricaoProduto" name="descricao"
-                                  maxlength="2000"></textarea>
+                        <textarea id="descricaoProduto" name="descricao" maxlength="2000"></textarea>
                     </div>
 
                     <div class="campo">
                         <label for="precoProduto">Preço (R$) *</label>
-                        <input type="number" id="precoProduto" name="preco"
-                               min="0.01" step="0.01" required>
+                        <input type="number" id="precoProduto" name="preco" min="0.01" step="0.01" required>
                     </div>
 
                     <div class="campo">
                         <label for="estoqueProduto">Estoque *</label>
-                        <input type="number" id="estoqueProduto" name="estoque"
-                               min="0" step="1" value="0" required>
+                        <input type="number" id="estoqueProduto" name="estoque" min="0" step="1" value="0" required>
                     </div>
 
                     <div class="campo campo-completo">
@@ -952,34 +982,27 @@
                             </p>
 
                             <div class="botoes-imagem">
-                                <button type="button" class="botao-imagem"
-                                        id="botaoCamera">
+                                <button type="button" class="botao-imagem" id="botaoCamera">
                                     📸 Tirar foto
                                 </button>
 
-                                <button type="button" class="botao-imagem"
-                                        id="botaoGaleria">
+                                <button type="button" class="botao-imagem" id="botaoGaleria">
                                     🖼️ Escolher imagem
                                 </button>
                             </div>
 
-                            <input type="file" id="imagemProduto"
-                                   class="input-imagem-escondido"
-                                   accept="image/jpeg,image/png,image/webp">
+                            <input type="file" id="imagemProduto" class="input-imagem-escondido"
+                                accept="image/jpeg,image/png,image/webp">
 
-                            <input type="file" id="imagemCamera"
-                                   class="input-imagem-escondido"
-                                   accept="image/*" capture="environment">
+                            <input type="file" id="imagemCamera" class="input-imagem-escondido" accept="image/*"
+                                capture="environment">
 
                             <div id="previaImagem" class="previa-imagem">
-                                <img id="imagemPreview"
-                                     alt="Pré-visualização do produto">
+                                <img id="imagemPreview" alt="Pré-visualização do produto">
 
                                 <p id="nomeArquivo" class="nome-arquivo"></p>
 
-                                <button type="button"
-                                        class="botao-remover-imagem"
-                                        id="botaoRemoverImagem">
+                                <button type="button" class="botao-remover-imagem" id="botaoRemoverImagem">
                                     Remover foto
                                 </button>
                             </div>
@@ -992,17 +1015,14 @@
                         </div>
                     </div>
 
-                    <div id="mensagemProduto"
-                         class="mensagem-formulario"
-                         role="status" aria-live="polite"></div>
+                    <div id="mensagemProduto" class="mensagem-formulario" role="status" aria-live="polite"></div>
 
                     <div class="acoes-formulario">
                         <button type="submit" class="botao" id="botaoCadastrar">
                             Cadastrar produto
                         </button>
 
-                        <button type="button" class="botao-secundario"
-                                id="botaoCancelarEdicao" hidden>
+                        <button type="button" class="botao-secundario" id="botaoCancelarEdicao" hidden>
                             Cancelar edição
                         </button>
                     </div>
@@ -1019,8 +1039,7 @@
                     </div>
 
                     <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                        <button type="button" class="botao-secundario"
-                                id="botaoAtualizar">
+                        <button type="button" class="botao-secundario" id="botaoAtualizar">
                             ↻ Atualizar lista
                         </button>
 
@@ -1080,11 +1099,8 @@
 
     <!-- Modal personalizado de exclusão -->
     <div id="modalExclusao" class="modal-exclusao" hidden>
-        <div class="caixa-exclusao"
-             role="dialog"
-             aria-modal="true"
-             aria-labelledby="tituloExclusao"
-             aria-describedby="descricaoExclusao">
+        <div class="caixa-exclusao" role="dialog" aria-modal="true" aria-labelledby="tituloExclusao"
+            aria-describedby="descricaoExclusao">
 
             <div class="icone-exclusao" aria-hidden="true">!</div>
 
@@ -1099,13 +1115,11 @@
             </p>
 
             <div class="botoes-exclusao">
-                <button type="button" id="cancelarExclusao"
-                        class="btn-cancelar-exclusao">
+                <button type="button" id="cancelarExclusao" class="btn-cancelar-exclusao">
                     Cancelar
                 </button>
 
-                <button type="button" id="confirmarExclusao"
-                        class="btn-confirmar-exclusao">
+                <button type="button" id="confirmarExclusao" class="btn-confirmar-exclusao">
                     Sim, excluir
                 </button>
             </div>
@@ -1113,11 +1127,7 @@
     </div>
 
     <!-- Notificações personalizadas -->
-    <div id="notificacaoPainel"
-         class="notificacao-painel"
-         role="status"
-         aria-live="polite"
-         hidden></div>
+    <div id="notificacaoPainel" class="notificacao-painel" role="status" aria-live="polite" hidden></div>
 
     <script>
         /* Estado do painel */
@@ -2153,4 +2163,5 @@
         carregarCategorias();
     </script>
 </body>
+
 </html>
