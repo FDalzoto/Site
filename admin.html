@@ -858,7 +858,7 @@
 
         /* Botão para voltar à loja */
 
-        .voltar-loja {
+        .voltar {
             width: 100%;
             margin-top: auto;
             padding: 13px 12px;
@@ -871,9 +871,22 @@
             cursor: pointer;
         }
 
-        .voltar-loja:hover {
+        .voltar:disabled,
+        .botao:disabled,
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+
+        .voltar:hover {
             background: #246b3d;
         }
+
+        .voltar {
+            margin-top: 20px;
+        }
+
     </style>
 </head>
 
@@ -893,9 +906,9 @@
                 <a href="#produtos">Produtos cadastrados</a>
             </nav>
 
-            <a href="index.html" class="voltar-loja">
-                ← Voltar para a loja
-            </a>
+        <a class="voltar" href="index.html">
+            Voltar para o site
+        </a>
 
             <button type="button" class="sair" id="botaoSair">
                 ↪ Sair do painel
