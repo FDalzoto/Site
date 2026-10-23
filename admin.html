@@ -646,12 +646,12 @@
     <div id="modalExclusao" class="modal-exclusao" hidden>
         <div class="caixa-exclusao" role="dialog" aria-modal="true" aria-labelledby="tituloExclusao" aria-describedby="descricaoExclusao">
             <div class="icone-exclusao" aria-hidden="true">!</div>
-            <h2 id="tituloExclusao">Desativar produto?</h2>
-            <p id="descricaoExclusao">Tem certeza de que deseja desativar este produto?</p>
-            <p class="aviso-exclusao">O produto deixará de aparecer no catálogo público.</p>
+            <h2 id="tituloExclusao">Excluir produto permanentemente?</h2>
+            <p id="descricaoExclusao">Tem certeza de que deseja excluir este produto permanentemente?</p>
+            <p class="aviso-exclusao">Esta ação não poderá ser desfeita. O produto será removido do banco de dados.</p>
             <div class="botoes-exclusao">
                 <button type="button" id="cancelarExclusao" class="btn-cancelar-exclusao">Cancelar</button>
-                <button type="button" id="confirmarExclusao" class="btn-confirmar-exclusao">Sim, desativar</button>
+                <button type="button" id="confirmarExclusao" class="btn-confirmar-exclusao">Sim, excluir</button>
             </div>
         </div>
     </div>
@@ -806,11 +806,9 @@
                     const botaoExcluir = document.createElement("button");
                     botaoExcluir.type = "button";
                     botaoExcluir.className = "botao-excluir";
-                    botaoExcluir.textContent = produto.ativo === true ? "Desativar" : "Já desativado";
-                    botaoExcluir.disabled = produto.ativo !== true;
-                    botaoExcluir.title = produto.ativo === true
-                        ? "Desativar produto no catálogo"
-                        : "Este produto já está desativado";
+                    botaoExcluir.textContent = "Excluir";
+                    botaoExcluir.disabled = false;
+                    botaoExcluir.title = "Excluir produto permanentemente";
                     botaoExcluir.addEventListener("click", () => excluirProduto(produto.id, produto.nome));
 
                     containerAcoes.append(botaoEditar, botaoExcluir);
@@ -1107,13 +1105,13 @@
             produtoPendenteExclusao = { id: Number(id), nome: String(nome || "este produto") };
             focoAnteriorExclusao = document.activeElement;
             descricaoExclusao.replaceChildren();
-            descricaoExclusao.append(document.createTextNode("Tem certeza de que deseja desativar "));
+            descricaoExclusao.append(document.createTextNode("Tem certeza de que deseja excluir permanentemente "));
             const nomeElemento = document.createElement("strong");
             nomeElemento.textContent = produtoPendenteExclusao.nome;
-            descricaoExclusao.append(nomeElemento, document.createTextNode(" do catálogo?"));
+            descricaoExclusao.append(nomeElemento, document.createTextNode(" do banco de dados?"));
             confirmarExclusao.disabled = false;
             cancelarExclusao.disabled = false;
-            confirmarExclusao.textContent = "Sim, desativar";
+            confirmarExclusao.textContent = "Sim, excluir";
             modalExclusao.hidden = false;
             cancelarExclusao.focus();
         }
@@ -1124,7 +1122,7 @@
             produtoPendenteExclusao = null;
             confirmarExclusao.disabled = false;
             cancelarExclusao.disabled = false;
-            confirmarExclusao.textContent = "Sim, desativar";
+            confirmarExclusao.textContent = "Sim, excluir";
             if (focoAnteriorExclusao?.isConnected) focoAnteriorExclusao.focus();
         }
 
@@ -1148,7 +1146,7 @@
             const id = produtoPendenteExclusao.id;
             confirmarExclusao.disabled = true;
             cancelarExclusao.disabled = true;
-            confirmarExclusao.textContent = "Desativando...";
+            confirmarExclusao.textContent = "Excluindo...";
 
             try {
                 const resposta = await fetch("/api/excluir-produto", {
@@ -1165,7 +1163,7 @@
                 }
 
                 const resultado = await lerRespostaJson(resposta);
-                if (!resposta.ok) throw new Error(resultado.erro || "Não foi possível desativar o produto.");
+                if (!resposta.ok) throw new Error(resultado.erro || "Não foi possível excluir o produto.");
 
                 if (Number(produtoEmEdicao) === id) cancelarEdicao();
 
@@ -1173,18 +1171,18 @@
                 produtoPendenteExclusao = null;
                 confirmarExclusao.disabled = false;
                 cancelarExclusao.disabled = false;
-                confirmarExclusao.textContent = "Sim, desativar";
+                confirmarExclusao.textContent = "Sim, excluir";
 
-                mostrarNotificacao(resultado.mensagem || "Produto desativado com sucesso!");
+                mostrarNotificacao(resultado.mensagem || "Produto excluído com sucesso!");
                 await carregarProdutos();
 
                 if (focoAnteriorExclusao?.isConnected) focoAnteriorExclusao.focus();
             } catch (erro) {
-                console.error("Erro ao desativar produto:", erro);
+                console.error("Erro ao excluir produto:", erro);
                 confirmarExclusao.disabled = false;
                 cancelarExclusao.disabled = false;
                 confirmarExclusao.textContent = "Tentar novamente";
-                mostrarNotificacao(erro.message || "Ocorreu um erro ao desativar o produto.", "erro");
+                mostrarNotificacao(erro.message || "Ocorreu um erro ao excluir o produto.", "erro");
             }
         });
 
@@ -1348,7 +1346,7 @@
             const celula = adicionarCelulaAdmin(carregando, "Carregando administradores..."); celula.colSpan = 6; celula.className = "vazio";
             listaAdministradores.appendChild(carregando);
             try {
-                const dados = await requisicaoAdministradores("/api/admins/listar");
+                const dados = await requisicaoAdministradores("/api/admins");
                 const admins = Array.isArray(dados) ? dados : dados.administradores;
                 if (!Array.isArray(admins)) throw new Error("Formato da lista de administradores inválido.");
                 listaAdministradoresCarregada = admins;
@@ -1391,7 +1389,7 @@
             if (new TextEncoder().encode(senha).length > 72) return mostrarMensagemAdmin("A senha excede o limite de 72 bytes. Use uma senha menor.", "erro");
             botaoCadastrarAdmin.disabled = true; botaoCadastrarAdmin.textContent = "Cadastrando...";
             try {
-                const dados = await requisicaoAdministradores("/api/admins/cadastrar", { method: "POST", body: JSON.stringify({ nome, email, senha, nivel }) });
+                const dados = await requisicaoAdministradores("/api/admins", { method: "POST", body: JSON.stringify({ nome, email, senha, nivel }) });
                 formularioAdmin.reset(); mostrarMensagemAdmin(dados.mensagem || "Administrador cadastrado com sucesso.", "sucesso");
                 await carregarAdministradores();
             } catch (erro) { mostrarMensagemAdmin(erro.message || "Não foi possível cadastrar o administrador.", "erro"); }
@@ -1401,7 +1399,7 @@
         async function desativarAdministrador(admin) {
             if (!admin || !admin.id || !confirm(`Deseja desativar a conta de ${admin.nome || admin.email}? Essa pessoa perderá o acesso ao painel.`)) return;
             try {
-                const dados = await requisicaoAdministradores("/api/admins/excluir", { method: "DELETE", body: JSON.stringify({ id: admin.id }) });
+                const dados = await requisicaoAdministradores("/api/admins", { method: "DELETE", body: JSON.stringify({ id: admin.id }) });
                 mostrarMensagemAdmin(dados.mensagem || "Conta administrativa desativada.", "sucesso");
                 await carregarAdministradores();
             } catch (erro) { mostrarMensagemAdmin(erro.message || "Não foi possível desativar a conta.", "erro"); }
