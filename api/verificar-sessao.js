@@ -5,6 +5,8 @@ export default function handler(req, res) {
     res.setHeader("Cache-Control", "no-store, private");
 
     if (req.method !== "GET") {
+        res.setHeader("Allow", "GET");
+
         return res.status(405).json({
             erro: "Método não permitido."
         });
@@ -24,10 +26,15 @@ export default function handler(req, res) {
             autenticado: true
         });
     } catch (erro) {
-        console.error("Erro ao verificar sessão:", erro);
+        console.error(
+            "Erro ao verificar sessão:",
+            erro
+        );
 
         return res.status(500).json({
+            autenticado: false,
             erro: "Não foi possível verificar a sessão."
         });
     }
 }
+

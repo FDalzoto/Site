@@ -7,24 +7,44 @@ export default async function handler(req, res) {
 
     if (req.method !== "DELETE") {
         res.setHeader("Allow", "DELETE");
+
         return res.status(405).json({
             erro: "Método não permitido."
         });
     }
 
     try {
+        // Verifica se o administrador está autenticado.
         if (!administradorAutenticado(req)) {
             return res.status(401).json({
                 erro: "Você precisa estar autenticado."
             });
         }
 
-        const dados =
-            typeof req.body === "string"
+        // Valida os dados recebidos.
+        let dados;
+
+        try {
+            dados = typeof req.body === "string"
                 ? JSON.parse(req.body)
                 : req.body;
+        } catch {
+            return res.status(400).json({
+                erro: "Os dados enviados são inválidos."
+            });
+        }
 
-        const id = Number(dados?.id);
+        if (
+            !dados ||
+            typeof dados !== "object" ||
+            Array.isArray(dados)
+        ) {
+            return res.status(400).json({
+                erro: "Informe o ID do produto."
+            });
+        }
+
+        const id = Number(dados.id);
 
         if (!Number.isSafeInteger(id) || id < 1) {
             return res.status(400).json({
@@ -32,16 +52,28 @@ export default async function handler(req, res) {
             });
         }
 
-        const conexao = neon(
-            process.env.PETSHOP_DATABASE_URL
-        );
+        // Verifica a configuração do banco.
+        const databaseUrl = process.env.PETSHOP_DATABASE_URL;
 
+        if (!databaseUrl) {
+            console.error(
+                "PETSHOP_DATABASE_URL não configurada."
+            );
+
+            return res.status(500).json({
+                erro: "Banco de dados indisponível."
+            });
+        }
+
+        const conexao = neon(databaseUrl);
+
+        // Exclusão lógica: preserva o registro no banco.
         const resultado = await conexao`
             UPDATE produtos
             SET ativo = FALSE
             WHERE id = ${id}
               AND ativo = TRUE
-            RETURNING id, nome
+            RETURNING id, nome, ativo
         `;
 
         if (resultado.length === 0) {
@@ -55,12 +87,6 @@ export default async function handler(req, res) {
             produto: resultado[0]
         });
     } catch (erro) {
-        if (erro instanceof SyntaxError) {
-            return res.status(400).json({
-                erro: "Os dados enviados são inválidos."
-            });
-        }
-
         console.error("Erro ao excluir produto:", erro);
 
         return res.status(500).json({
