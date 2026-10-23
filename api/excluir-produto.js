@@ -1,3 +1,4 @@
+
 import sql from "../lib/db.js";
 import { obterAdministradorId } from "../lib/auth.js";
 
@@ -25,7 +26,7 @@ export default async function handler(req, res) {
             });
         }
 
-        // Confirma que a conta administrativa continua ativa.
+        // Confirma que o administrador continua ativo.
         const administradores = await sql`
             SELECT id
             FROM administradores
@@ -40,7 +41,7 @@ export default async function handler(req, res) {
             });
         }
 
-        // Lê os dados enviados pelo painel.
+        // Valida os dados recebidos.
         let dados;
 
         try {
@@ -71,33 +72,45 @@ export default async function handler(req, res) {
             });
         }
 
-        // Desativa o produto sem removê-lo do banco de dados.
-        const resultado = await sql`
-            UPDATE produtos
-            SET ativo = FALSE
-            WHERE id = ${id}
-              AND ativo = TRUE
-            RETURNING id, nome, ativo
-        `;
+        // Exclui definitivamente o produto, esteja ele ativo ou não.
+        // O banco impedirá a exclusão se houver referências protegidas
+        // por chaves estrangeiras, preservando o histórico relacionado.
+        let resultado;
+
+        try {
+            resultado = await sql`
+                DELETE FROM produtos
+                WHERE id = ${id}
+                RETURNING id, nome
+            `;
+        } catch (erroBanco) {
+            if (erroBanco.code === "23503") {
+                return res.status(409).json({
+                    erro:
+                        "Este produto está vinculado a outros registros, " +
+                        "como pedidos ou movimentações de estoque. " +
+                        "Ele não pode ser excluído definitivamente."
+                });
+            }
+
+            throw erroBanco;
+        }
 
         if (resultado.length === 0) {
             return res.status(404).json({
-                erro: "Produto não encontrado ou já desativado."
+                erro: "Produto não encontrado."
             });
         }
 
         return res.status(200).json({
-            mensagem: "Produto desativado do catálogo com sucesso.",
+            mensagem: "Produto excluído com sucesso.",
             produto: resultado[0]
         });
     } catch (erro) {
-        console.error(
-            "Erro ao desativar produto:",
-            erro
-        );
+        console.error("Erro ao excluir produto:", erro);
 
         return res.status(500).json({
-            erro: "Não foi possível desativar o produto."
+            erro: "Não foi possível excluir o produto."
         });
     }
 }
