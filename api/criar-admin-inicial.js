@@ -15,8 +15,10 @@ function segredoValido(recebido, esperado) {
     const a = Buffer.from(recebido, "utf8");
     const b = Buffer.from(esperado, "utf8");
 
-    return a.length === b.length &&
-        timingSafeEqual(a, b);
+    return (
+        a.length === b.length &&
+        timingSafeEqual(a, b)
+    );
 }
 
 export default async function handler(req, res) {
@@ -27,6 +29,7 @@ export default async function handler(req, res) {
 
     if (req.method !== "POST") {
         res.setHeader("Allow", "POST");
+
         return res.status(405).json({
             erro: "Método não permitido."
         });
@@ -105,42 +108,30 @@ export default async function handler(req, res) {
 
         const senhaHash = await bcrypt.hash(senha, 12);
 
-        const resultados = await sql.transaction([
-            sql`
-                SELECT pg_advisory_xact_lock(734291806)
-            `,
-            sql`
-                SELECT id
+        const criado = await sql`
+            INSERT INTO public.administradores (
+                nome,
+                email,
+                senha_hash,
+                nivel,
+                ativo,
+                criado_em
+            )
+            SELECT
+                ${nomeLimpo},
+                ${emailLimpo},
+                ${senhaHash},
+                'superadmin',
+                TRUE,
+                CURRENT_TIMESTAMP
+            WHERE NOT EXISTS (
+                SELECT 1
                 FROM public.administradores
-                LIMIT 1
-            `,
-            sql`
-                INSERT INTO public.administradores (
-                    nome,
-                    email,
-                    senha_hash,
-                    nivel,
-                    ativo,
-                    criado_em
-                )
-                SELECT
-                    ${nomeLimpo},
-                    ${emailLimpo},
-                    ${senhaHash},
-                    'superadmin',
-                    TRUE,
-                    CURRENT_TIMESTAMP
-                WHERE NOT EXISTS (
-                    SELECT 1
-                    FROM public.administradores
-                )
-                RETURNING id, nome, email, nivel
-            `
-        ]);
+            )
+            RETURNING id, nome, email, nivel
+        `;
 
-        const criado = resultados[2];
-
-        if (!criado || criado.length === 0) {
+        if (criado.length === 0) {
             return res.status(409).json({
                 erro: "Já existe um administrador cadastrado."
             });
@@ -151,6 +142,12 @@ export default async function handler(req, res) {
             administrador: criado[0]
         });
     } catch (erro) {
+        if (erro?.code === "23505") {
+            return res.status(409).json({
+                erro: "Já existe um administrador ou e-mail cadastrado."
+            });
+        }
+
         console.error(
             "Erro ao criar administrador inicial:",
             erro
