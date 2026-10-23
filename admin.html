@@ -59,9 +59,7 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -69,29 +67,16 @@
             color: var(--texto);
         }
 
-        button,
-        input,
-        textarea,
-        select {
-            font: inherit;
-        }
+        button, input, textarea, select { font: inherit; }
 
-        button:focus-visible,
-        a:focus-visible {
+        button:focus-visible, a:focus-visible {
             outline: 2px solid #86b99a;
             outline-offset: 3px;
         }
 
-        [hidden] {
-            display: none !important;
-        }
+        [hidden] { display: none !important; }
 
-        .layout {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Menu lateral */
+        .layout { display: flex; min-height: 100vh; }
 
         .sidebar {
             width: 250px;
@@ -103,11 +88,7 @@
             flex-direction: column;
         }
 
-        .logo {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
+        .logo { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
 
         .subtitulo {
             color: #cbdccf;
@@ -134,15 +115,11 @@
             font-size: 14px;
         }
 
-        .menu a.ativo,
-        .menu a:hover {
-            background: #246b3d;
-            color: white;
-        }
+        .menu a.ativo, .menu a:hover { background: #246b3d; color: white; }
 
-        .sair {
+        .sair, .voltar {
+            display: block;
             width: 100%;
-            margin-top: 10px;
             padding: 13px 12px;
             border: 1px solid #568365;
             border-radius: 8px;
@@ -151,26 +128,19 @@
             text-align: left;
             font-size: 14px;
             cursor: pointer;
+            transition: background 0.2s;
         }
 
-        .sair:hover {
-            background: #246b3d;
-        }
+        .voltar { margin-top: 20px; }
+        .sair { margin-top: 10px; }
+        .sair:hover, .voltar:hover { background: #246b3d; }
 
-        .sair:disabled,
-        .botao:disabled,
-        button:disabled {
+        .sair:disabled, .botao:disabled, button:disabled {
             opacity: 0.6;
             cursor: wait;
         }
 
-        /* Conteúdo */
-
-        .conteudo {
-            flex: 1;
-            min-width: 0;
-            padding: 32px;
-        }
+        .conteudo { flex: 1; min-width: 0; padding: 32px; }
 
         .topo {
             display: flex;
@@ -180,16 +150,8 @@
             margin-bottom: 32px;
         }
 
-        .topo h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .topo p {
-            color: var(--cinza);
-            font-size: 14px;
-            line-height: 1.6;
-        }
+        .topo h1 { font-size: 28px; margin-bottom: 8px; }
+        .topo p { color: var(--cinza); font-size: 14px; line-height: 1.6; }
 
         .status {
             background: var(--verde-claro);
@@ -201,12 +163,7 @@
             white-space: nowrap;
         }
 
-        .status.erro {
-            background: var(--vermelho-claro);
-            color: var(--vermelho);
-        }
-
-        /* Indicadores */
+        .status.erro { background: var(--vermelho-claro); color: var(--vermelho); }
 
         .resumo {
             display: grid;
@@ -223,20 +180,8 @@
             box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
         }
 
-        .rotulo {
-            font-size: 13px;
-            color: var(--cinza);
-            margin-bottom: 14px;
-        }
-
-        .valor {
-            font-size: 30px;
-            font-weight: 700;
-            color: var(--verde-escuro);
-            overflow-wrap: anywhere;
-        }
-
-        /* Seções */
+        .rotulo { font-size: 13px; color: var(--cinza); margin-bottom: 14px; }
+        .valor { font-size: 30px; font-weight: 700; color: var(--verde-escuro); overflow-wrap: anywhere; }
 
         .secao {
             background: var(--branco);
@@ -255,57 +200,31 @@
             margin-bottom: 20px;
         }
 
-        .secao h2 {
-            font-size: 18px;
-            line-height: 1.4;
-        }
+        .secao h2 { font-size: 18px; line-height: 1.4; }
+        .secao-descricao { color: var(--cinza); font-size: 13px; margin-top: 7px; line-height: 1.6; }
 
-        .secao-descricao {
-            color: var(--cinza);
-            font-size: 13px;
-            margin-top: 7px;
-            line-height: 1.6;
-        }
-
-        .botao {
+        .botao, .botao-secundario {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border: none;
             border-radius: 8px;
             padding: 12px 16px;
-            background: var(--verde);
-            color: white;
-            font-weight: 700;
             font-size: 13px;
+            font-weight: 700;
             text-decoration: none;
             cursor: pointer;
         }
 
-        .botao:hover {
-            background: var(--verde-escuro);
-        }
+        .botao { border: none; background: var(--verde); color: white; }
+        .botao:hover { background: var(--verde-escuro); }
 
         .botao-secundario {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 16px;
             border: 1px solid var(--borda);
-            border-radius: 8px;
             background: white;
             color: var(--texto);
-            font-size: 13px;
-            font-weight: 700;
-            text-decoration: none;
-            cursor: pointer;
         }
 
-        .botao-secundario:hover {
-            background: #f8fafc;
-        }
-
-        /* Formulário */
+        .botao-secundario:hover { background: #f8fafc; }
 
         .formulario-produto {
             display: grid;
@@ -314,25 +233,11 @@
             margin-top: 22px;
         }
 
-        .campo {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            min-width: 0;
-        }
+        .campo { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+        .campo-completo { grid-column: 1 / -1; }
+        .campo label { font-size: 13px; font-weight: 700; }
 
-        .campo-completo {
-            grid-column: 1 / -1;
-        }
-
-        .campo label {
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .campo input,
-        .campo textarea,
-        .campo select {
+        .campo input, .campo textarea, .campo select {
             width: 100%;
             padding: 12px 14px;
             border: 1px solid var(--borda);
@@ -342,47 +247,18 @@
             font-size: 14px;
         }
 
-        .campo input:focus,
-        .campo textarea:focus,
-        .campo select:focus {
+        .campo input:focus, .campo textarea:focus, .campo select:focus {
             outline: 2px solid #86b99a;
             border-color: var(--verde);
         }
 
-        .campo textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
+        .campo textarea { min-height: 100px; resize: vertical; }
+        .campo small { color: var(--cinza); font-size: 12px; line-height: 1.5; }
 
-        .campo small {
-            color: var(--cinza);
-            font-size: 12px;
-            line-height: 1.5;
-        }
-
-        .mensagem-formulario {
-            grid-column: 1 / -1;
-            font-size: 14px;
-            line-height: 1.5;
-            overflow-wrap: anywhere;
-        }
-
-        .mensagem-sucesso {
-            color: var(--verde-escuro);
-        }
-
-        .mensagem-erro {
-            color: var(--vermelho);
-        }
-
-        .acoes-formulario {
-            grid-column: 1 / -1;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        /* Imagens */
+        .mensagem-formulario { grid-column: 1 / -1; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+        .mensagem-sucesso { color: var(--verde-escuro); }
+        .mensagem-erro { color: var(--vermelho); }
+        .acoes-formulario { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; }
 
         .area-imagem {
             display: flex;
@@ -394,11 +270,7 @@
             background: #f8fbf8;
         }
 
-        .botoes-imagem {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+        .botoes-imagem { display: flex; flex-wrap: wrap; gap: 10px; }
 
         .botao-imagem {
             display: inline-flex;
@@ -415,13 +287,8 @@
             cursor: pointer;
         }
 
-        .botao-imagem:hover {
-            background: var(--verde-claro);
-        }
-
-        .input-imagem-escondido {
-            display: none !important;
-        }
+        .botao-imagem:hover { background: var(--verde-claro); }
+        .input-imagem-escondido { display: none !important; }
 
         .previa-imagem {
             display: none;
@@ -433,21 +300,8 @@
             background: white;
         }
 
-        .previa-imagem img {
-            display: block;
-            width: 100%;
-            max-height: 260px;
-            object-fit: contain;
-            border-radius: 6px;
-        }
-
-        .nome-arquivo {
-            color: var(--cinza);
-            font-size: 12px;
-            line-height: 1.5;
-            overflow-wrap: anywhere;
-            margin-top: 10px;
-        }
+        .previa-imagem img { display: block; width: 100%; max-height: 260px; object-fit: contain; border-radius: 6px; }
+        .nome-arquivo { color: var(--cinza); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; margin-top: 10px; }
 
         .botao-remover-imagem {
             margin-top: 12px;
@@ -460,91 +314,23 @@
             cursor: pointer;
         }
 
-        .botao-remover-imagem:hover {
-            background: var(--vermelho-claro);
-        }
+        .botao-remover-imagem:hover { background: var(--vermelho-claro); }
 
-        /* Tabela */
+        .tabela-container { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
 
-        .tabela-container {
-            width: 100%;
-            overflow-x: auto;
-        }
+        th, td { padding: 16px 12px; border-bottom: 1px solid var(--borda); font-size: 13px; vertical-align: middle; }
+        th { color: var(--cinza); font-weight: 600; background: #f8faf8; white-space: nowrap; }
+        td { overflow-wrap: anywhere; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th,
-        td {
-            padding: 16px 12px;
-            border-bottom: 1px solid var(--borda);
-            font-size: 13px;
-            vertical-align: middle;
-        }
-
-        th {
-            color: var(--cinza);
-            font-weight: 600;
-            background: #f8faf8;
-            white-space: nowrap;
-        }
-
-        td {
-            overflow-wrap: anywhere;
-        }
-
-        .vazio {
-            text-align: center;
-            padding: 36px 12px;
-            color: var(--cinza);
-            line-height: 1.7;
-        }
-
-        .acoes-produto {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            min-width: 150px;
-        }
-
-        .botao-editar,
-        .botao-excluir {
-            padding: 9px 12px;
-            border-radius: 7px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .botao-editar {
-            background: var(--verde-claro);
-            color: var(--verde-escuro);
-            border: 1px solid #b7d9bf;
-        }
-
-        .botao-editar:hover {
-            background: #d1ead6;
-        }
-
-        .botao-excluir {
-            background: var(--vermelho-claro);
-            color: var(--vermelho);
-            border: 1px solid #fecaca;
-        }
-
-        .botao-excluir:hover {
-            background: #ffe4e6;
-        }
-
-        .estoque-baixo {
-            color: var(--vermelho);
-            font-weight: 700;
-        }
-
-        /* Modal da câmera */
+        .vazio { text-align: center; padding: 36px 12px; color: var(--cinza); line-height: 1.7; }
+        .acoes-produto { display: flex; flex-wrap: wrap; gap: 8px; min-width: 150px; }
+        .botao-editar, .botao-excluir { padding: 9px 12px; border-radius: 7px; font-size: 12px; font-weight: 700; cursor: pointer; }
+        .botao-editar { background: var(--verde-claro); color: var(--verde-escuro); border: 1px solid #b7d9bf; }
+        .botao-editar:hover { background: #d1ead6; }
+        .botao-excluir { background: var(--vermelho-claro); color: var(--vermelho); border: 1px solid #fecaca; }
+        .botao-excluir:hover { background: #ffe4e6; }
+        .estoque-baixo { color: var(--vermelho); font-weight: 700; }
 
         .modal-camera {
             position: fixed;
@@ -557,48 +343,12 @@
             background: rgba(0, 0, 0, 0.85);
         }
 
-        .conteudo-camera {
-            width: 100%;
-            max-width: 600px;
-            max-height: 95vh;
-            overflow-y: auto;
-            padding: 22px;
-            background: white;
-            border-radius: 14px;
-        }
-
-        .conteudo-camera h2 {
-            margin-bottom: 16px;
-        }
-
-        #videoCamera {
-            display: block;
-            width: 100%;
-            max-height: 60vh;
-            background: #111;
-            border-radius: 10px;
-            object-fit: contain;
-        }
-
-        #erroCamera {
-            margin-top: 12px;
-            color: var(--vermelho);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .botoes-camera {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 16px;
-        }
-
-        .botoes-camera button {
-            flex: 1;
-        }
-
-        /* Modal de exclusão personalizado */
+        .conteudo-camera { width: 100%; max-width: 600px; max-height: 95vh; overflow-y: auto; padding: 22px; background: white; border-radius: 14px; }
+        .conteudo-camera h2 { margin-bottom: 16px; }
+        #videoCamera { display: block; width: 100%; max-height: 60vh; background: #111; border-radius: 10px; object-fit: contain; }
+        #erroCamera { margin-top: 12px; color: var(--vermelho); font-size: 14px; line-height: 1.5; }
+        .botoes-camera { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+        .botoes-camera button { flex: 1; }
 
         .modal-exclusao {
             position: fixed;
@@ -612,10 +362,7 @@
             backdrop-filter: blur(5px);
         }
 
-        .modal-exclusao[hidden],
-        .notificacao-painel[hidden] {
-            display: none !important;
-        }
+        .modal-exclusao[hidden], .notificacao-painel[hidden] { display: none !important; }
 
         .caixa-exclusao {
             width: 100%;
@@ -642,77 +389,19 @@
             font-weight: 700;
         }
 
-        .caixa-exclusao h2 {
-            margin-bottom: 14px;
-            color: var(--verde-escuro);
-            font-size: 23px;
-        }
+        .caixa-exclusao h2 { margin-bottom: 14px; color: var(--verde-escuro); font-size: 23px; }
+        .caixa-exclusao p { color: var(--cinza); font-size: 14px; line-height: 1.7; overflow-wrap: anywhere; }
+        #descricaoExclusao strong { color: var(--verde-escuro); }
+        .caixa-exclusao .aviso-exclusao { margin-top: 12px; margin-bottom: 26px; color: var(--vermelho); font-size: 12px; }
 
-        .caixa-exclusao p {
-            color: var(--cinza);
-            font-size: 14px;
-            line-height: 1.7;
-            overflow-wrap: anywhere;
-        }
-
-        #descricaoExclusao strong {
-            color: var(--verde-escuro);
-        }
-
-        .caixa-exclusao .aviso-exclusao {
-            margin-top: 12px;
-            margin-bottom: 26px;
-            color: var(--vermelho);
-            font-size: 12px;
-        }
-
-        .botoes-exclusao {
-            display: flex;
-            gap: 12px;
-        }
-
-        .botoes-exclusao button {
-            flex: 1;
-            min-height: 46px;
-            padding: 12px;
-            border-radius: 9px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-        }
-
-        .botoes-exclusao button:hover {
-            transform: translateY(-1px);
-        }
-
-        .btn-cancelar-exclusao {
-            border: 1px solid var(--borda);
-            background: #f8fafc;
-            color: #334155;
-        }
-
-        .btn-cancelar-exclusao:hover {
-            background: #e2e8f0;
-        }
-
-        .btn-confirmar-exclusao {
-            border: 1px solid #b91c1c;
-            background: #b91c1c;
-            color: white;
-        }
-
-        .btn-confirmar-exclusao:hover {
-            background: #991b1b;
-        }
-
-        .botoes-exclusao button:disabled {
-            opacity: 0.6;
-            cursor: wait;
-            transform: none;
-        }
-
-        /* Notificações personalizadas */
+        .botoes-exclusao { display: flex; gap: 12px; }
+        .botoes-exclusao button { flex: 1; min-height: 46px; padding: 12px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.2s; }
+        .botoes-exclusao button:hover { transform: translateY(-1px); }
+        .btn-cancelar-exclusao { border: 1px solid var(--borda); background: #f8fafc; color: #334155; }
+        .btn-cancelar-exclusao:hover { background: #e2e8f0; }
+        .btn-confirmar-exclusao { border: 1px solid #b91c1c; background: #b91c1c; color: white; }
+        .btn-confirmar-exclusao:hover { background: #991b1b; }
+        .botoes-exclusao button:disabled { opacity: 0.6; cursor: wait; transform: none; }
 
         .notificacao-painel {
             position: fixed;
@@ -731,155 +420,40 @@
             animation: modalEntrada 0.2s ease-out;
         }
 
-        .notificacao-painel.erro {
-            background: #b91c1c;
-            color: white;
-        }
+        .notificacao-painel.erro { background: #b91c1c; color: white; }
 
         @keyframes modalEntrada {
-            from {
-                opacity: 0;
-                transform: translateY(10px) scale(0.97);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(10px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Rodapé */
-
-        .rodape {
-            text-align: center;
-            color: var(--cinza);
-            font-size: 12px;
-            line-height: 1.6;
-            padding: 0 0 24px;
-        }
+        .rodape { text-align: center; color: var(--cinza); font-size: 12px; line-height: 1.6; padding: 0 0 24px; }
 
         @media (max-width: 1000px) {
-            .sidebar {
-                width: 220px;
-            }
-
-            .conteudo {
-                padding: 22px;
-            }
-
-            .resumo {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 12px;
-            }
+            .sidebar { width: 220px; }
+            .conteudo { padding: 22px; }
+            .resumo { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
         }
 
         @media (max-width: 700px) {
-            .layout {
-                display: block;
-            }
-
-            .sidebar {
-                width: 100%;
-                padding: 20px;
-            }
-
-            .subtitulo {
-                margin-bottom: 18px;
-            }
-
-            .menu-titulo {
-                margin-top: 16px;
-            }
-
-            .sair {
-                margin-top: 20px;
-            }
-
-            .conteudo {
-                padding: 18px;
-            }
-
-            .topo,
-            .secao-topo {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .topo h1 {
-                font-size: 24px;
-            }
-
-            .resumo {
-                grid-template-columns: 1fr;
-            }
-
-            .secao {
-                padding: 16px;
-            }
-
-            .formulario-produto {
-                grid-template-columns: 1fr;
-            }
-
-            .campo-completo,
-            .mensagem-formulario,
-            .acoes-formulario {
-                grid-column: auto;
-            }
-
-            .botoes-imagem,
-            .botoes-camera {
-                flex-direction: column;
-            }
-
-            .botao-imagem,
-            .botoes-camera button {
-                width: 100%;
-            }
-
-            .acoes-produto {
-                min-width: 140px;
-            }
-
-            .caixa-exclusao {
-                padding: 25px 20px;
-            }
-
-            .botoes-exclusao {
-                flex-direction: column-reverse;
-            }
-
-            .notificacao-painel {
-                right: 16px;
-                bottom: 16px;
-            }
-        }
-
-
-        /* Botão para voltar à loja */
-
-        .voltar {
-            display: block;
-            width: 100%;
-            margin-top: 20px;
-            padding: 13px 12px;
-            border: 1px solid #568365;
-            border-radius: 8px;
-            background: transparent;
-            color: white;
-            text-align: left;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .voltar:hover {
-            background: #246b3d;
-        }
-
-        .voltar:disabled {
-            opacity: 0.6;
-            cursor: wait;
+            .layout { display: block; }
+            .sidebar { width: 100%; padding: 20px; }
+            .subtitulo { margin-bottom: 18px; }
+            .menu-titulo { margin-top: 16px; }
+            .sair { margin-top: 20px; }
+            .conteudo { padding: 18px; }
+            .topo, .secao-topo { align-items: flex-start; flex-direction: column; }
+            .topo h1 { font-size: 24px; }
+            .resumo { grid-template-columns: 1fr; }
+            .secao { padding: 16px; }
+            .formulario-produto { grid-template-columns: 1fr; }
+            .campo-completo, .mensagem-formulario, .acoes-formulario { grid-column: auto; }
+            .botoes-imagem, .botoes-camera { flex-direction: column; }
+            .botao-imagem, .botoes-camera button { width: 100%; }
+            .acoes-produto { min-width: 140px; }
+            .caixa-exclusao { padding: 25px 20px; }
+            .botoes-exclusao { flex-direction: column-reverse; }
+            .notificacao-painel { right: 16px; bottom: 16px; }
         }
     </style>
 </head>
@@ -900,13 +474,8 @@
                 <a href="#produtos">Produtos cadastrados</a>
             </nav>
 
-            <button type="button" class="voltar" id="botaoVoltar">
-                ← Voltar para o site
-            </button>
-
-            <button type="button" class="sair" id="botaoSair">
-                ↪ Sair do painel
-            </button>
+            <button type="button" class="voltar" id="botaoVoltar">← Voltar para o site</button>
+            <button type="button" class="sair" id="botaoSair">↪ Sair do painel</button>
         </aside>
 
         <main class="conteudo">
@@ -915,7 +484,6 @@
                     <h1>Painel administrativo</h1>
                     <p>Gerencie o catálogo da sua loja em um só lugar.</p>
                 </div>
-
                 <div class="status">Sessão autenticada</div>
             </header>
 
@@ -924,26 +492,20 @@
                     <div class="rotulo">Produtos encontrados</div>
                     <div class="valor" id="totalProdutos">—</div>
                 </div>
-
                 <div class="card">
                     <div class="rotulo">Produtos ativos</div>
                     <div class="valor" id="produtosAtivos">—</div>
                 </div>
-
                 <div class="card">
                     <div class="rotulo">Situação da API</div>
-                    <div class="valor" id="statusApi" style="font-size: 20px;">
-                        Verificando...
-                    </div>
+                    <div class="valor" id="statusApi" style="font-size: 20px;">Verificando...</div>
                 </div>
             </section>
 
             <section class="secao" id="novo-produto">
                 <div>
                     <h2 id="tituloFormulario">Cadastrar novo produto</h2>
-                    <p class="secao-descricao" id="descricaoFormulario">
-                        Preencha os dados e adicione uma foto ao catálogo.
-                    </p>
+                    <p class="secao-descricao" id="descricaoFormulario">Preencha os dados e adicione uma foto ao catálogo.</p>
                 </div>
 
                 <form id="formularioProduto" class="formulario-produto">
@@ -976,57 +538,31 @@
 
                     <div class="campo campo-completo">
                         <label>Foto do produto</label>
-
                         <div class="area-imagem">
-                            <p class="secao-descricao">
-                                Tire uma foto com a câmera ou escolha uma
-                                imagem salva no seu dispositivo.
-                            </p>
-
+                            <p class="secao-descricao">Tire uma foto com a câmera ou escolha uma imagem salva no seu dispositivo.</p>
                             <div class="botoes-imagem">
-                                <button type="button" class="botao-imagem" id="botaoCamera">
-                                    📸 Tirar foto
-                                </button>
-
-                                <button type="button" class="botao-imagem" id="botaoGaleria">
-                                    🖼️ Escolher imagem
-                                </button>
+                                <button type="button" class="botao-imagem" id="botaoCamera">📸 Tirar foto</button>
+                                <button type="button" class="botao-imagem" id="botaoGaleria">🖼️ Escolher imagem</button>
                             </div>
 
-                            <input type="file" id="imagemProduto" class="input-imagem-escondido"
-                                accept="image/jpeg,image/png,image/webp">
-
-                            <input type="file" id="imagemCamera" class="input-imagem-escondido" accept="image/*"
-                                capture="environment">
+                            <input type="file" id="imagemProduto" class="input-imagem-escondido" accept="image/jpeg,image/png,image/webp">
+                            <input type="file" id="imagemCamera" class="input-imagem-escondido" accept="image/*" capture="environment">
 
                             <div id="previaImagem" class="previa-imagem">
                                 <img id="imagemPreview" alt="Pré-visualização do produto">
-
                                 <p id="nomeArquivo" class="nome-arquivo"></p>
-
-                                <button type="button" class="botao-remover-imagem" id="botaoRemoverImagem">
-                                    Remover foto
-                                </button>
+                                <button type="button" class="botao-remover-imagem" id="botaoRemoverImagem">Remover foto</button>
                             </div>
 
-                            <small>
-                                Formatos JPG, PNG ou WebP. Tamanho máximo:
-                                4 MB. A imagem será enviada ao armazenamento
-                                quando você salvar o produto.
-                            </small>
+                            <small>Formatos JPG, PNG ou WebP. Tamanho máximo: 4 MB. A imagem será enviada ao armazenamento quando você salvar o produto.</small>
                         </div>
                     </div>
 
                     <div id="mensagemProduto" class="mensagem-formulario" role="status" aria-live="polite"></div>
 
                     <div class="acoes-formulario">
-                        <button type="submit" class="botao" id="botaoCadastrar">
-                            Cadastrar produto
-                        </button>
-
-                        <button type="button" class="botao-secundario" id="botaoCancelarEdicao" hidden>
-                            Cancelar edição
-                        </button>
+                        <button type="submit" class="botao" id="botaoCadastrar">Cadastrar produto</button>
+                        <button type="button" class="botao-secundario" id="botaoCancelarEdicao" hidden>Cancelar edição</button>
                     </div>
                 </form>
             </section>
@@ -1035,16 +571,10 @@
                 <div class="secao-topo">
                     <div>
                         <h2>Produtos cadastrados</h2>
-                        <p class="secao-descricao">
-                            Informações carregadas do banco de dados.
-                        </p>
+                        <p class="secao-descricao">Informações carregadas do banco de dados.</p>
                     </div>
-
                     <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                        <button type="button" class="botao-secundario" id="botaoAtualizar">
-                            ↻ Atualizar lista
-                        </button>
-
+                        <button type="button" class="botao-secundario" id="botaoAtualizar">↻ Atualizar lista</button>
                         <a class="botao" href="produtos.html">Ver catálogo</a>
                     </div>
                 </div>
@@ -1057,180 +587,91 @@
                                 <th>Categoria</th>
                                 <th>Preço</th>
                                 <th>Estoque</th>
+                                <th>Situação</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
-
                         <tbody id="listaProdutos">
                             <tr>
-                                <td colspan="5" class="vazio">
-                                    Carregando produtos...
-                                </td>
+                                <td colspan="6" class="vazio">Carregando produtos...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </section>
 
-            <footer class="rodape">
-                Campos Gerais Pet Shop · Área administrativa
-            </footer>
+            <footer class="rodape">Campos Gerais Pet Shop · Área administrativa</footer>
         </main>
     </div>
 
-    <!-- Modal da câmera -->
     <div id="modalCamera" class="modal-camera" hidden>
         <div class="conteudo-camera">
             <h2>Tirar foto do produto</h2>
-
             <video id="videoCamera" autoplay playsinline muted></video>
-
             <p id="erroCamera" role="status" aria-live="polite"></p>
-
             <div class="botoes-camera">
-                <button type="button" id="capturarFoto" class="botao">
-                    📸 Capturar foto
-                </button>
-
-                <button type="button" id="fecharCamera" class="botao-imagem">
-                    Cancelar
-                </button>
+                <button type="button" id="capturarFoto" class="botao">📸 Capturar foto</button>
+                <button type="button" id="fecharCamera" class="botao-imagem">Cancelar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal personalizado de exclusão -->
     <div id="modalExclusao" class="modal-exclusao" hidden>
-        <div class="caixa-exclusao" role="dialog" aria-modal="true" aria-labelledby="tituloExclusao"
-            aria-describedby="descricaoExclusao">
-
+        <div class="caixa-exclusao" role="dialog" aria-modal="true" aria-labelledby="tituloExclusao" aria-describedby="descricaoExclusao">
             <div class="icone-exclusao" aria-hidden="true">!</div>
-
-            <h2 id="tituloExclusao">Excluir produto?</h2>
-
-            <p id="descricaoExclusao">
-                Tem certeza de que deseja excluir este produto?
-            </p>
-
-            <p class="aviso-exclusao">
-                Essa ação não poderá ser desfeita.
-            </p>
-
+            <h2 id="tituloExclusao">Desativar produto?</h2>
+            <p id="descricaoExclusao">Tem certeza de que deseja desativar este produto?</p>
+            <p class="aviso-exclusao">O produto deixará de aparecer no catálogo público.</p>
             <div class="botoes-exclusao">
-                <button type="button" id="cancelarExclusao" class="btn-cancelar-exclusao">
-                    Cancelar
-                </button>
-
-                <button type="button" id="confirmarExclusao" class="btn-confirmar-exclusao">
-                    Sim, excluir
-                </button>
+                <button type="button" id="cancelarExclusao" class="btn-cancelar-exclusao">Cancelar</button>
+                <button type="button" id="confirmarExclusao" class="btn-confirmar-exclusao">Sim, desativar</button>
             </div>
         </div>
     </div>
 
-    <!-- Notificações personalizadas -->
     <div id="notificacaoPainel" class="notificacao-painel" role="status" aria-live="polite" hidden></div>
 
     <script>
-        /* Estado do painel */
-
         let produtosCarregados = [];
         let produtoEmEdicao = null;
         let imagemAtualEdicao = null;
-
         let arquivoImagemSelecionado = null;
         let urlPreviaImagem = null;
         let fluxoCamera = null;
-
         let produtoPendenteExclusao = null;
         let temporizadorNotificacao = null;
         let focoAnteriorExclusao = null;
 
-        const formularioProduto =
-            document.getElementById("formularioProduto");
-
-        const tituloFormulario =
-            document.getElementById("tituloFormulario");
-
-        const descricaoFormulario =
-            document.getElementById("descricaoFormulario");
-
-        const botaoCadastrar =
-            document.getElementById("botaoCadastrar");
-
-        const botaoCancelarEdicao =
-            document.getElementById("botaoCancelarEdicao");
-
-        const inputGaleria =
-            document.getElementById("imagemProduto");
-
-        const inputCamera =
-            document.getElementById("imagemCamera");
-
-        const botaoCamera =
-            document.getElementById("botaoCamera");
-
-        const botaoGaleria =
-            document.getElementById("botaoGaleria");
-
-        const botaoRemoverImagem =
-            document.getElementById("botaoRemoverImagem");
-
-        const previaImagem =
-            document.getElementById("previaImagem");
-
-        const imagemPreview =
-            document.getElementById("imagemPreview");
-
-        const nomeArquivo =
-            document.getElementById("nomeArquivo");
-
-        const modalCamera =
-            document.getElementById("modalCamera");
-
-        const videoCamera =
-            document.getElementById("videoCamera");
-
-        const capturarFoto =
-            document.getElementById("capturarFoto");
-
-        const fecharCamera =
-            document.getElementById("fecharCamera");
-
-        const erroCamera =
-            document.getElementById("erroCamera");
-
-        const mensagemProduto =
-            document.getElementById("mensagemProduto");
-
-        const modalExclusao =
-            document.getElementById("modalExclusao");
-
-        const descricaoExclusao =
-            document.getElementById("descricaoExclusao");
-
-        const cancelarExclusao =
-            document.getElementById("cancelarExclusao");
-
-        const confirmarExclusao =
-            document.getElementById("confirmarExclusao");
-
-        const notificacaoPainel =
-            document.getElementById("notificacaoPainel");
-
-        /* Notificações sem alert() */
+        const formularioProduto = document.getElementById("formularioProduto");
+        const tituloFormulario = document.getElementById("tituloFormulario");
+        const descricaoFormulario = document.getElementById("descricaoFormulario");
+        const botaoCadastrar = document.getElementById("botaoCadastrar");
+        const botaoCancelarEdicao = document.getElementById("botaoCancelarEdicao");
+        const inputGaleria = document.getElementById("imagemProduto");
+        const inputCamera = document.getElementById("imagemCamera");
+        const botaoCamera = document.getElementById("botaoCamera");
+        const botaoGaleria = document.getElementById("botaoGaleria");
+        const botaoRemoverImagem = document.getElementById("botaoRemoverImagem");
+        const previaImagem = document.getElementById("previaImagem");
+        const imagemPreview = document.getElementById("imagemPreview");
+        const nomeArquivo = document.getElementById("nomeArquivo");
+        const modalCamera = document.getElementById("modalCamera");
+        const videoCamera = document.getElementById("videoCamera");
+        const capturarFoto = document.getElementById("capturarFoto");
+        const fecharCamera = document.getElementById("fecharCamera");
+        const erroCamera = document.getElementById("erroCamera");
+        const mensagemProduto = document.getElementById("mensagemProduto");
+        const modalExclusao = document.getElementById("modalExclusao");
+        const descricaoExclusao = document.getElementById("descricaoExclusao");
+        const cancelarExclusao = document.getElementById("cancelarExclusao");
+        const confirmarExclusao = document.getElementById("confirmarExclusao");
+        const notificacaoPainel = document.getElementById("notificacaoPainel");
 
         function mostrarNotificacao(texto, tipo = "sucesso") {
             clearTimeout(temporizadorNotificacao);
-
             notificacaoPainel.textContent = texto;
-            notificacaoPainel.classList.toggle(
-                "erro",
-                tipo === "erro"
-            );
-
+            notificacaoPainel.classList.toggle("erro", tipo === "erro");
             notificacaoPainel.hidden = false;
-
             temporizadorNotificacao = setTimeout(() => {
                 notificacaoPainel.hidden = true;
             }, 4500);
@@ -1239,27 +680,18 @@
         function mostrarMensagem(texto, tipo) {
             mensagemProduto.textContent = texto;
             mensagemProduto.className = "mensagem-formulario";
-
-            if (tipo === "sucesso") {
-                mensagemProduto.classList.add("mensagem-sucesso");
-            } else if (tipo === "erro") {
-                mensagemProduto.classList.add("mensagem-erro");
-            }
+            if (tipo === "sucesso") mensagemProduto.classList.add("mensagem-sucesso");
+            else if (tipo === "erro") mensagemProduto.classList.add("mensagem-erro");
         }
 
         async function lerRespostaJson(resposta) {
             const texto = await resposta.text();
-
             try {
                 return texto ? JSON.parse(texto) : {};
             } catch {
-                throw new Error(
-                    `O servidor retornou uma resposta inválida (HTTP ${resposta.status}).`
-                );
+                throw new Error(`O servidor retornou uma resposta inválida (HTTP ${resposta.status}).`);
             }
         }
-
-        /* Carregar produtos */
 
         async function carregarProdutos() {
             const lista = document.getElementById("listaProdutos");
@@ -1268,7 +700,7 @@
             const status = document.getElementById("statusApi");
 
             try {
-                const resposta = await fetch("/api/produtos", {
+                const resposta = await fetch("/api/admin-produtos", {
                     method: "GET",
                     credentials: "same-origin",
                     cache: "no-store"
@@ -1279,34 +711,24 @@
                     return;
                 }
 
-                if (!resposta.ok) {
-                    throw new Error("Não foi possível carregar os produtos.");
-                }
+                if (!resposta.ok) throw new Error("Não foi possível carregar os produtos.");
 
                 const produtos = await lerRespostaJson(resposta);
-
-                if (!Array.isArray(produtos)) {
-                    throw new Error("A resposta da API é inválida.");
-                }
+                if (!Array.isArray(produtos)) throw new Error("A resposta da API é inválida.");
 
                 produtosCarregados = produtos;
-
                 total.textContent = produtos.length;
-                ativos.textContent = produtos.length;
+                ativos.textContent = produtos.filter(produto => produto.ativo === true).length;
                 status.textContent = "Conectada";
                 status.classList.remove("erro");
-
                 lista.replaceChildren();
 
                 if (produtos.length === 0) {
                     const linha = document.createElement("tr");
                     const celula = document.createElement("td");
-
-                    celula.colSpan = 5;
+                    celula.colSpan = 6;
                     celula.className = "vazio";
-                    celula.textContent =
-                        "Nenhum produto cadastrado no catálogo.";
-
+                    celula.textContent = "Nenhum produto cadastrado.";
                     linha.appendChild(celula);
                     lista.appendChild(linha);
                     return;
@@ -1314,113 +736,83 @@
 
                 produtos.forEach(produto => {
                     const linha = document.createElement("tr");
-
                     const nome = document.createElement("td");
                     nome.textContent = produto.nome || "Sem nome";
 
                     const categoria = document.createElement("td");
-                    categoria.textContent =
-                        produto.categoria || "Sem categoria";
+                    categoria.textContent = produto.categoria || "Sem categoria";
 
                     const preco = document.createElement("td");
                     const valor = Number(produto.preco);
-
                     preco.textContent = Number.isFinite(valor)
-                        ? valor.toLocaleString("pt-BR", {
-                            style: "currency",
-                            currency: "BRL"
-                        })
+                        ? valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
                         : "Preço indisponível";
 
                     const estoque = document.createElement("td");
                     const quantidade = Number(produto.estoque);
+                    estoque.textContent = Number.isFinite(quantidade) ? quantidade : "—";
 
-                    estoque.textContent = Number.isFinite(quantidade)
-                        ? quantidade
-                        : "—";
-
-                    if (
-                        Number.isFinite(quantidade) &&
-                        quantidade <= 5
-                    ) {
+                    if (Number.isFinite(quantidade) && quantidade <= 5 && produto.ativo === true) {
                         estoque.classList.add("estoque-baixo");
                         estoque.title = "Estoque baixo";
                     }
 
-                    const acoes = document.createElement("td");
-                    const containerAcoes =
-                        document.createElement("div");
+                    const situacao = document.createElement("td");
+                    situacao.textContent = produto.ativo === true ? "Ativo" : "Desativado";
+                    situacao.style.fontWeight = "700";
+                    situacao.style.color = produto.ativo === true ? "#166534" : "#b91c1c";
 
+                    const acoes = document.createElement("td");
+                    const containerAcoes = document.createElement("div");
                     containerAcoes.className = "acoes-produto";
 
-                    const botaoEditar =
-                        document.createElement("button");
-
+                    const botaoEditar = document.createElement("button");
                     botaoEditar.type = "button";
                     botaoEditar.className = "botao-editar";
                     botaoEditar.textContent = "Editar";
+                    botaoEditar.disabled = produto.ativo !== true;
+                    botaoEditar.title = produto.ativo === true
+                        ? "Editar produto"
+                        : "Não é possível editar um produto desativado";
+                    botaoEditar.addEventListener("click", () => editarProduto(produto.id));
 
-                    botaoEditar.addEventListener("click", () => {
-                        editarProduto(produto.id);
-                    });
-
-                    const botaoExcluir =
-                        document.createElement("button");
-
+                    const botaoExcluir = document.createElement("button");
                     botaoExcluir.type = "button";
                     botaoExcluir.className = "botao-excluir";
-                    botaoExcluir.textContent = "Excluir";
-
-                    botaoExcluir.addEventListener("click", () => {
-                        excluirProduto(produto.id, produto.nome);
-                    });
+                    botaoExcluir.textContent = produto.ativo === true ? "Desativar" : "Já desativado";
+                    botaoExcluir.disabled = produto.ativo !== true;
+                    botaoExcluir.title = produto.ativo === true
+                        ? "Desativar produto no catálogo"
+                        : "Este produto já está desativado";
+                    botaoExcluir.addEventListener("click", () => excluirProduto(produto.id, produto.nome));
 
                     containerAcoes.append(botaoEditar, botaoExcluir);
                     acoes.appendChild(containerAcoes);
-
-                    linha.append(
-                        nome,
-                        categoria,
-                        preco,
-                        estoque,
-                        acoes
-                    );
-
+                    linha.append(nome, categoria, preco, estoque, situacao, acoes);
                     lista.appendChild(linha);
                 });
             } catch (erro) {
                 console.error("Erro ao carregar produtos:", erro);
-
                 total.textContent = "—";
                 ativos.textContent = "—";
                 status.textContent = "Erro";
                 status.classList.add("erro");
-
                 lista.replaceChildren();
 
                 const linha = document.createElement("tr");
                 const celula = document.createElement("td");
-
-                celula.colSpan = 5;
+                celula.colSpan = 6;
                 celula.className = "vazio";
-                celula.textContent =
-                    "Não foi possível carregar os produtos. Verifique a API.";
-
+                celula.textContent = "Não foi possível carregar os produtos. Verifique a API.";
                 linha.appendChild(celula);
                 lista.appendChild(linha);
             }
         }
 
-        document.getElementById("botaoAtualizar").addEventListener(
-            "click",
-            carregarProdutos
-        );
-
-        /* Carregar categorias */
+        document.getElementById("botaoAtualizar").addEventListener("click", carregarProdutos);
 
         async function carregarCategorias() {
-            const select =
-                document.getElementById("categoriaProduto");
+            const select = document.getElementById("categoriaProduto");
 
             try {
                 const resposta = await fetch("/api/categorias", {
@@ -1434,26 +826,16 @@
                     return;
                 }
 
-                if (!resposta.ok) {
-                    throw new Error(
-                        "Não foi possível consultar as categorias."
-                    );
-                }
+                if (!resposta.ok) throw new Error("Não foi possível consultar as categorias.");
 
                 const categorias = await lerRespostaJson(resposta);
-
-                if (!Array.isArray(categorias)) {
-                    throw new Error("Resposta de categorias inválida.");
-                }
+                if (!Array.isArray(categorias)) throw new Error("Resposta de categorias inválida.");
 
                 select.replaceChildren();
 
                 const opcaoInicial = document.createElement("option");
                 opcaoInicial.value = "";
-                opcaoInicial.textContent = categorias.length
-                    ? "Selecione uma categoria"
-                    : "Nenhuma categoria cadastrada";
-
+                opcaoInicial.textContent = categorias.length ? "Selecione uma categoria" : "Nenhuma categoria cadastrada";
                 select.appendChild(opcaoInicial);
 
                 categorias.forEach(categoria => {
@@ -1464,18 +846,13 @@
                 });
             } catch (erro) {
                 console.error("Erro ao carregar categorias:", erro);
-
                 select.replaceChildren();
-
                 const opcao = document.createElement("option");
                 opcao.value = "";
                 opcao.textContent = "Erro ao carregar categorias";
-
                 select.appendChild(opcao);
             }
         }
-
-        /* Seleção e pré-visualização de imagens */
 
         function liberarPreviaImagem() {
             if (urlPreviaImagem) {
@@ -1487,38 +864,22 @@
         function selecionarImagem(arquivo) {
             if (!arquivo) return;
 
-            const tiposPermitidos = [
-                "image/jpeg",
-                "image/png",
-                "image/webp"
-            ];
-
+            const tiposPermitidos = ["image/jpeg", "image/png", "image/webp"];
             if (!tiposPermitidos.includes(arquivo.type)) {
-                mostrarNotificacao(
-                    "Escolha uma imagem JPG, PNG ou WebP.",
-                    "erro"
-                );
+                mostrarNotificacao("Escolha uma imagem JPG, PNG ou WebP.", "erro");
                 return;
             }
 
             if (arquivo.size === 0 || arquivo.size > 4 * 1024 * 1024) {
-                mostrarNotificacao(
-                    "A imagem deve ter no máximo 4 MB.",
-                    "erro"
-                );
+                mostrarNotificacao("A imagem deve ter no máximo 4 MB.", "erro");
                 return;
             }
 
             arquivoImagemSelecionado = arquivo;
-
             liberarPreviaImagem();
-
             urlPreviaImagem = URL.createObjectURL(arquivo);
             imagemPreview.src = urlPreviaImagem;
-
-            nomeArquivo.textContent =
-                arquivo.name || "Foto do produto";
-
+            nomeArquivo.textContent = arquivo.name || "Foto do produto";
             previaImagem.style.display = "block";
         }
 
@@ -1532,52 +893,39 @@
             inputCamera.value = "";
         });
 
-        botaoGaleria.addEventListener("click", () => {
-            inputGaleria.click();
-        });
+        botaoGaleria.addEventListener("click", () => inputGaleria.click());
 
         botaoRemoverImagem.addEventListener("click", () => {
             arquivoImagemSelecionado = null;
             imagemAtualEdicao = null;
-
             inputGaleria.value = "";
             inputCamera.value = "";
-
             imagemPreview.removeAttribute("src");
             nomeArquivo.textContent = "";
             previaImagem.style.display = "none";
-
             liberarPreviaImagem();
         });
-
-        /* Câmera */
 
         async function abrirCamera() {
             erroCamera.textContent = "";
             modalCamera.hidden = false;
 
-            if (
-                !navigator.mediaDevices ||
-                !navigator.mediaDevices.getUserMedia
-            ) {
-                erroCamera.textContent =
-                    "A câmera não está disponível neste navegador. " +
-                    "Verifique se está usando HTTPS ou escolha uma imagem salva.";
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                erroCamera.textContent = "A câmera não está disponível neste navegador. Verifique se está usando HTTPS ou escolha uma imagem salva.";
                 return;
             }
 
             botaoCamera.disabled = true;
 
             try {
-                fluxoCamera =
-                    await navigator.mediaDevices.getUserMedia({
-                        audio: false,
-                        video: {
-                            facingMode: { ideal: "environment" },
-                            width: { ideal: 1280 },
-                            height: { ideal: 720 }
-                        }
-                    });
+                fluxoCamera = await navigator.mediaDevices.getUserMedia({
+                    audio: false,
+                    video: {
+                        facingMode: { ideal: "environment" },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                });
 
                 videoCamera.srcObject = fluxoCamera;
                 await videoCamera.play();
@@ -1590,21 +938,13 @@
                 }
 
                 const mensagens = {
-                    NotAllowedError:
-                        "A permissão para usar a câmera foi negada. " +
-                        "Permita o acesso nas configurações do navegador.",
-                    NotFoundError:
-                        "Não foi encontrada uma câmera neste dispositivo.",
-                    NotReadableError:
-                        "A câmera está ocupada ou não pode ser acessada. " +
-                        "Feche outros aplicativos que possam estar usando-a.",
-                    OverconstrainedError:
-                        "A câmera não oferece as configurações solicitadas."
+                    NotAllowedError: "A permissão para usar a câmera foi negada. Permita o acesso nas configurações do navegador.",
+                    NotFoundError: "Não foi encontrada uma câmera neste dispositivo.",
+                    NotReadableError: "A câmera está ocupada ou não pode ser acessada. Feche outros aplicativos que possam estar usando-a.",
+                    OverconstrainedError: "A câmera não oferece as configurações solicitadas."
                 };
 
-                erroCamera.textContent =
-                    mensagens[erro.name] ||
-                    "Não foi possível abrir a câmera. Verifique as permissões.";
+                erroCamera.textContent = mensagens[erro.name] || "Não foi possível abrir a câmera. Verifique as permissões.";
             } finally {
                 botaoCamera.disabled = false;
             }
@@ -1615,7 +955,6 @@
                 fluxoCamera.getTracks().forEach(track => track.stop());
                 fluxoCamera = null;
             }
-
             videoCamera.srcObject = null;
             modalCamera.hidden = true;
             erroCamera.textContent = "";
@@ -1625,15 +964,12 @@
         fecharCamera.addEventListener("click", fecharCameraModal);
 
         modalCamera.addEventListener("click", evento => {
-            if (evento.target === modalCamera) {
-                fecharCameraModal();
-            }
+            if (evento.target === modalCamera) fecharCameraModal();
         });
 
         capturarFoto.addEventListener("click", async () => {
             if (!videoCamera.videoWidth || !videoCamera.videoHeight) {
-                erroCamera.textContent =
-                    "Aguarde a câmera iniciar antes de tirar a foto.";
+                erroCamera.textContent = "Aguarde a câmera iniciar antes de tirar a foto.";
                 return;
             }
 
@@ -1641,107 +977,61 @@
 
             try {
                 const canvas = document.createElement("canvas");
-
                 const larguraOriginal = videoCamera.videoWidth;
                 const alturaOriginal = videoCamera.videoHeight;
-
-                const escala = Math.min(
-                    1,
-                    1600 / Math.max(larguraOriginal, alturaOriginal)
-                );
+                const escala = Math.min(1, 1600 / Math.max(larguraOriginal, alturaOriginal));
 
                 canvas.width = Math.round(larguraOriginal * escala);
                 canvas.height = Math.round(alturaOriginal * escala);
 
                 const contexto = canvas.getContext("2d");
+                if (!contexto) throw new Error("Não foi possível preparar a imagem.");
 
-                if (!contexto) {
-                    throw new Error(
-                        "Não foi possível preparar a imagem."
-                    );
-                }
-
-                contexto.drawImage(
-                    videoCamera,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
+                contexto.drawImage(videoCamera, 0, 0, canvas.width, canvas.height);
 
                 const blob = await new Promise((resolve, reject) => {
-                    canvas.toBlob(
-                        resultado => {
-                            if (resultado) {
-                                resolve(resultado);
-                            } else {
-                                reject(
-                                    new Error("Não foi possível gerar a foto.")
-                                );
-                            }
-                        },
-                        "image/jpeg",
-                        0.82
-                    );
+                    canvas.toBlob(resultado => {
+                        if (resultado) resolve(resultado);
+                        else reject(new Error("Não foi possível gerar a foto."));
+                    }, "image/jpeg", 0.82);
                 });
 
-                const arquivo = new File(
-                    [blob],
-                    `produto-${Date.now()}.jpg`,
-                    { type: "image/jpeg" }
-                );
-
-                if (arquivo.size > 4 * 1024 * 1024) {
-                    throw new Error(
-                        "A foto ultrapassou 4 MB. Tente tirar outra foto."
-                    );
-                }
+                const arquivo = new File([blob], `produto-${Date.now()}.jpg`, { type: "image/jpeg" });
+                if (arquivo.size > 4 * 1024 * 1024) throw new Error("A foto ultrapassou 4 MB. Tente tirar outra foto.");
 
                 selecionarImagem(arquivo);
                 fecharCameraModal();
             } catch (erro) {
                 console.error("Erro ao capturar foto:", erro);
-
-                erroCamera.textContent =
-                    erro.message || "Não foi possível capturar a foto.";
+                erroCamera.textContent = erro.message || "Não foi possível capturar a foto.";
             } finally {
                 capturarFoto.disabled = false;
             }
         });
 
-        /* Editar produto */
-
         function editarProduto(id) {
-            const produto = produtosCarregados.find(
-                item => Number(item.id) === Number(id)
-            );
+            const produto = produtosCarregados.find(item => Number(item.id) === Number(id));
 
             if (!produto) {
-                mostrarNotificacao(
-                    "Não foi possível localizar o produto. Atualize a lista.",
-                    "erro"
-                );
+                mostrarNotificacao("Não foi possível localizar o produto. Atualize a lista.", "erro");
+                return;
+            }
+
+            if (produto.ativo !== true) {
+                mostrarNotificacao("Produtos desativados não podem ser editados.", "erro");
                 return;
             }
 
             produtoEmEdicao = Number(produto.id);
             imagemAtualEdicao = produto.imagem || null;
             arquivoImagemSelecionado = null;
-
             liberarPreviaImagem();
 
             formularioProduto.elements.nome.value = produto.nome || "";
-            formularioProduto.elements.descricao.value =
-                produto.descricao || "";
-
-            formularioProduto.elements.preco.value =
-                Number(produto.preco);
-
-            formularioProduto.elements.estoque.value =
-                Number(produto.estoque);
-
-            formularioProduto.elements.categoria_id.value =
-                String(produto.categoria_id || "");
+            formularioProduto.elements.descricao.value = produto.descricao || "";
+            formularioProduto.elements.preco.value = Number(produto.preco);
+            formularioProduto.elements.estoque.value = Number(produto.estoque);
+            formularioProduto.elements.categoria_id.value = String(produto.categoria_id || "");
 
             inputGaleria.value = "";
             inputCamera.value = "";
@@ -1757,121 +1047,68 @@
             }
 
             tituloFormulario.textContent = "Editar produto";
-
-            descricaoFormulario.textContent =
-                "Altere os campos desejados e salve as modificações.";
-
+            descricaoFormulario.textContent = "Altere os campos desejados e salve as modificações.";
             botaoCadastrar.textContent = "Salvar alterações";
             botaoCancelarEdicao.hidden = false;
-
             mostrarMensagem("", "");
 
-            document.getElementById("novo-produto").scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
+            document.getElementById("novo-produto").scrollIntoView({ behavior: "smooth", block: "start" });
         }
 
         function cancelarEdicao() {
             produtoEmEdicao = null;
             imagemAtualEdicao = null;
             arquivoImagemSelecionado = null;
-
             formularioProduto.reset();
-
             formularioProduto.elements.estoque.value = "0";
-
             inputGaleria.value = "";
             inputCamera.value = "";
-
             liberarPreviaImagem();
-
             imagemPreview.removeAttribute("src");
             nomeArquivo.textContent = "";
             previaImagem.style.display = "none";
-
             tituloFormulario.textContent = "Cadastrar novo produto";
-
-            descricaoFormulario.textContent =
-                "Preencha os dados e adicione uma foto ao catálogo.";
-
+            descricaoFormulario.textContent = "Preencha os dados e adicione uma foto ao catálogo.";
             botaoCadastrar.textContent = "Cadastrar produto";
             botaoCancelarEdicao.hidden = true;
-
             mostrarMensagem("", "");
         }
 
-        botaoCancelarEdicao.addEventListener(
-            "click",
-            cancelarEdicao
-        );
-
-        /* Modal personalizado de exclusão */
+        botaoCancelarEdicao.addEventListener("click", cancelarEdicao);
 
         function abrirModalExclusao(id, nome) {
-            produtoPendenteExclusao = {
-                id: Number(id),
-                nome: String(nome || "este produto")
-            };
-
+            produtoPendenteExclusao = { id: Number(id), nome: String(nome || "este produto") };
             focoAnteriorExclusao = document.activeElement;
-
             descricaoExclusao.replaceChildren();
-
-            descricaoExclusao.append(
-                document.createTextNode(
-                    "Tem certeza de que deseja excluir "
-                )
-            );
-
+            descricaoExclusao.append(document.createTextNode("Tem certeza de que deseja desativar "));
             const nomeElemento = document.createElement("strong");
             nomeElemento.textContent = produtoPendenteExclusao.nome;
-
-            descricaoExclusao.append(
-                nomeElemento,
-                document.createTextNode(" do catálogo?")
-            );
-
+            descricaoExclusao.append(nomeElemento, document.createTextNode(" do catálogo?"));
             confirmarExclusao.disabled = false;
             cancelarExclusao.disabled = false;
-            confirmarExclusao.textContent = "Sim, excluir";
-
+            confirmarExclusao.textContent = "Sim, desativar";
             modalExclusao.hidden = false;
             cancelarExclusao.focus();
         }
 
         function fecharModalExclusao() {
-            if (!modalExclusao.hidden && confirmarExclusao.disabled) {
-                return;
-            }
-
+            if (!modalExclusao.hidden && confirmarExclusao.disabled) return;
             modalExclusao.hidden = true;
             produtoPendenteExclusao = null;
-
             confirmarExclusao.disabled = false;
             cancelarExclusao.disabled = false;
-            confirmarExclusao.textContent = "Sim, excluir";
-
-            if (focoAnteriorExclusao?.isConnected) {
-                focoAnteriorExclusao.focus();
-            }
+            confirmarExclusao.textContent = "Sim, desativar";
+            if (focoAnteriorExclusao?.isConnected) focoAnteriorExclusao.focus();
         }
 
-        cancelarExclusao.addEventListener(
-            "click",
-            fecharModalExclusao
-        );
+        cancelarExclusao.addEventListener("click", fecharModalExclusao);
 
         modalExclusao.addEventListener("click", evento => {
-            if (evento.target === modalExclusao) {
-                fecharModalExclusao();
-            }
+            if (evento.target === modalExclusao) fecharModalExclusao();
         });
 
         document.addEventListener("keydown", evento => {
-            if (evento.key === "Escape" && !modalExclusao.hidden) {
-                fecharModalExclusao();
-            }
+            if (evento.key === "Escape" && !modalExclusao.hidden) fecharModalExclusao();
         });
 
         async function excluirProduto(id, nome) {
@@ -1882,19 +1119,16 @@
             if (!produtoPendenteExclusao) return;
 
             const id = produtoPendenteExclusao.id;
-
             confirmarExclusao.disabled = true;
             cancelarExclusao.disabled = true;
-            confirmarExclusao.textContent = "Excluindo...";
+            confirmarExclusao.textContent = "Desativando...";
 
             try {
                 const resposta = await fetch("/api/excluir-produto", {
                     method: "DELETE",
                     credentials: "same-origin",
                     cache: "no-store",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ id })
                 });
 
@@ -1904,173 +1138,98 @@
                 }
 
                 const resultado = await lerRespostaJson(resposta);
+                if (!resposta.ok) throw new Error(resultado.erro || "Não foi possível desativar o produto.");
 
-                if (!resposta.ok) {
-                    throw new Error(
-                        resultado.erro ||
-                        "Não foi possível excluir o produto."
-                    );
-                }
-
-                if (Number(produtoEmEdicao) === id) {
-                    cancelarEdicao();
-                }
+                if (Number(produtoEmEdicao) === id) cancelarEdicao();
 
                 modalExclusao.hidden = true;
                 produtoPendenteExclusao = null;
-
                 confirmarExclusao.disabled = false;
                 cancelarExclusao.disabled = false;
-                confirmarExclusao.textContent = "Sim, excluir";
+                confirmarExclusao.textContent = "Sim, desativar";
 
-                mostrarNotificacao(
-                    resultado.mensagem ||
-                    "Produto excluído do catálogo com sucesso!"
-                );
-
+                mostrarNotificacao(resultado.mensagem || "Produto desativado com sucesso!");
                 await carregarProdutos();
 
-                if (focoAnteriorExclusao?.isConnected) {
-                    focoAnteriorExclusao.focus();
-                }
+                if (focoAnteriorExclusao?.isConnected) focoAnteriorExclusao.focus();
             } catch (erro) {
-                console.error("Erro ao excluir produto:", erro);
-
+                console.error("Erro ao desativar produto:", erro);
                 confirmarExclusao.disabled = false;
                 cancelarExclusao.disabled = false;
                 confirmarExclusao.textContent = "Tentar novamente";
-
-                mostrarNotificacao(
-                    erro.message ||
-                    "Ocorreu um erro ao excluir o produto.",
-                    "erro"
-                );
+                mostrarNotificacao(erro.message || "Ocorreu um erro ao desativar o produto.", "erro");
             }
         });
 
-        /* Enviar imagem para o armazenamento */
-
         async function enviarImagem(arquivo) {
-            const tiposPermitidos = [
-                "image/jpeg",
-                "image/png",
-                "image/webp"
-            ];
-
-            if (!tiposPermitidos.includes(arquivo.type)) {
-                throw new Error(
-                    "Escolha uma imagem JPG, PNG ou WebP."
-                );
-            }
-
-            if (arquivo.size === 0 || arquivo.size > 4 * 1024 * 1024) {
-                throw new Error("A imagem deve ter no máximo 4 MB.");
-            }
+            const tiposPermitidos = ["image/jpeg", "image/png", "image/webp"];
+            if (!tiposPermitidos.includes(arquivo.type)) throw new Error("Escolha uma imagem JPG, PNG ou WebP.");
+            if (arquivo.size === 0 || arquivo.size > 4 * 1024 * 1024) throw new Error("A imagem deve ter no máximo 4 MB.");
 
             const resposta = await fetch("/api/upload-imagem", {
                 method: "POST",
                 credentials: "same-origin",
-                headers: {
-                    "Content-Type": arquivo.type
-                },
+                headers: { "Content-Type": arquivo.type },
                 body: arquivo
             });
 
             if (resposta.status === 401) {
                 window.location.replace("/login.html");
-                throw new Error(
-                    "Sua sessão expirou. Entre novamente."
-                );
+                throw new Error("Sua sessão expirou. Entre novamente.");
             }
 
             const resultado = await lerRespostaJson(resposta);
-
-            if (!resposta.ok || !resultado.url) {
-                throw new Error(
-                    resultado.erro ||
-                    "Não foi possível enviar a imagem."
-                );
-            }
-
+            if (!resposta.ok || !resultado.url) throw new Error(resultado.erro || "Não foi possível enviar a imagem.");
             return resultado.url;
         }
-
-        /* Cadastrar ou editar produto */
 
         formularioProduto.addEventListener("submit", async evento => {
             evento.preventDefault();
 
             if (produtoEmEdicao !== null) {
                 const produtoExiste = produtosCarregados.some(
-                    produto =>
-                        Number(produto.id) === Number(produtoEmEdicao)
+                    produto => Number(produto.id) === Number(produtoEmEdicao) && produto.ativo === true
                 );
 
                 if (!produtoExiste) {
-                    mostrarMensagem(
-                        "Não foi possível localizar o produto. Atualize a lista e tente novamente.",
-                        "erro"
-                    );
+                    mostrarMensagem("Não foi possível localizar um produto ativo. Atualize a lista e tente novamente.", "erro");
                     return;
                 }
             }
 
             const editando = produtoEmEdicao !== null;
             const idEdicao = produtoEmEdicao;
-
             const dados = new FormData(formularioProduto);
             const arquivo = arquivoImagemSelecionado;
 
             botaoCadastrar.disabled = true;
             botaoCancelarEdicao.disabled = true;
-
-            botaoCadastrar.textContent = arquivo
-                ? "Enviando imagem..."
-                : "Salvando...";
-
+            botaoCadastrar.textContent = arquivo ? "Enviando imagem..." : "Salvando...";
             mostrarMensagem("", "");
 
             try {
-                let imagem = editando
-                    ? imagemAtualEdicao
-                    : null;
-
-                if (arquivo) {
-                    imagem = await enviarImagem(arquivo);
-                }
+                let imagem = editando ? imagemAtualEdicao : null;
+                if (arquivo) imagem = await enviarImagem(arquivo);
 
                 const produto = {
                     nome: String(dados.get("nome") || "").trim(),
-                    descricao: String(
-                        dados.get("descricao") || ""
-                    ).trim(),
+                    descricao: String(dados.get("descricao") || "").trim(),
                     preco: Number(dados.get("preco")),
                     estoque: Number(dados.get("estoque")),
                     categoria_id: Number(dados.get("categoria_id")),
                     imagem
                 };
 
-                if (editando) {
-                    produto.id = idEdicao;
-                }
+                if (editando) produto.id = idEdicao;
 
-                botaoCadastrar.textContent = editando
-                    ? "Salvando alterações..."
-                    : "Salvando produto...";
+                botaoCadastrar.textContent = editando ? "Salvando alterações..." : "Salvando produto...";
 
-                const resposta = await fetch(
-                    editando
-                        ? "/api/editar-produto"
-                        : "/api/cadastrar-produto",
-                    {
-                        method: editando ? "PUT" : "POST",
-                        credentials: "same-origin",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(produto)
-                    }
-                );
+                const resposta = await fetch(editando ? "/api/editar-produto" : "/api/cadastrar-produto", {
+                    method: editando ? "PUT" : "POST",
+                    credentials: "same-origin",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(produto)
+                });
 
                 if (resposta.status === 401) {
                     window.location.replace("/login.html");
@@ -2078,98 +1237,51 @@
                 }
 
                 const resultado = await lerRespostaJson(resposta);
-
-                if (!resposta.ok) {
-                    throw new Error(
-                        resultado.erro ||
-                        "Não foi possível salvar o produto."
-                    );
-                }
+                if (!resposta.ok) throw new Error(resultado.erro || "Não foi possível salvar o produto.");
 
                 cancelarEdicao();
-
-                mostrarMensagem(
-                    resultado.mensagem ||
-                    (editando
-                        ? "Produto atualizado com sucesso!"
-                        : "Produto cadastrado com sucesso!"),
-                    "sucesso"
-                );
-
+                mostrarMensagem(resultado.mensagem || (editando ? "Produto atualizado com sucesso!" : "Produto cadastrado com sucesso!"), "sucesso");
                 await carregarProdutos();
 
-                document.getElementById("produtos").scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
+                document.getElementById("produtos").scrollIntoView({ behavior: "smooth", block: "start" });
             } catch (erro) {
                 console.error("Erro ao salvar produto:", erro);
-
-                mostrarMensagem(
-                    erro.message ||
-                    "Ocorreu um erro ao salvar o produto.",
-                    "erro"
-                );
+                mostrarMensagem(erro.message || "Ocorreu um erro ao salvar o produto.", "erro");
             } finally {
                 botaoCadastrar.disabled = false;
                 botaoCancelarEdicao.disabled = false;
-
-                botaoCadastrar.textContent =
-                    produtoEmEdicao !== null
-                        ? "Salvar alterações"
-                        : "Cadastrar produto";
+                botaoCadastrar.textContent = produtoEmEdicao !== null ? "Salvar alterações" : "Cadastrar produto";
             }
         });
 
-        /* Encerrar sessão */
+        document.getElementById("botaoSair").addEventListener("click", async function () {
+            const botao = this;
+            botao.disabled = true;
+            botao.textContent = "Saindo...";
 
-        document.getElementById("botaoSair").addEventListener(
-            "click",
-            async function () {
-                const botao = this;
+            try {
+                const resposta = await fetch("/api/logout", {
+                    method: "POST",
+                    credentials: "same-origin",
+                    cache: "no-store"
+                });
 
-                botao.disabled = true;
-                botao.textContent = "Saindo...";
-
-                try {
-                    const resposta = await fetch("/api/logout", {
-                        method: "POST",
-                        credentials: "same-origin",
-                        cache: "no-store"
-                    });
-
-                    if (!resposta.ok) {
-                        throw new Error(
-                            "Não foi possível encerrar a sessão."
-                        );
-                    }
-
-                    window.location.replace("/login.html");
-                } catch (erro) {
-                    console.error("Erro ao sair:", erro);
-
-                    botao.disabled = false;
-                    botao.textContent = "↪ Sair do painel";
-
-                    mostrarNotificacao(
-                        "Não foi possível sair. Tente novamente.",
-                        "erro"
-                    );
-                }
+                if (!resposta.ok) throw new Error("Não foi possível encerrar a sessão.");
+                window.location.replace("/login.html");
+            } catch (erro) {
+                console.error("Erro ao sair:", erro);
+                botao.disabled = false;
+                botao.textContent = "↪ Sair do painel";
+                mostrarNotificacao("Não foi possível sair. Tente novamente.", "erro");
             }
-        );
-
-        /* Voltar para o site */
+        });
 
         document.getElementById("botaoVoltar").addEventListener("click", function () {
             window.location.href = "/index.html";
         });
 
-        /* Inicialização */
-
         carregarProdutos();
         carregarCategorias();
     </script>
 </body>
-
 </html>

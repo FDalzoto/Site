@@ -1,6 +1,8 @@
-
 export default function handler(req, res) {
-    res.setHeader("Cache-Control", "no-store");
+    res.setHeader(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, private"
+    );
 
     if (req.method !== "POST") {
         res.setHeader("Allow", "POST");

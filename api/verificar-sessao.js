@@ -1,8 +1,11 @@
+import sql from "../lib/db.js";
+import { obterAdministradorId } from "../lib/auth.js";
 
-import { administradorAutenticado } from "../lib/auth.js";
-
-export default function handler(req, res) {
-    res.setHeader("Cache-Control", "no-store, private");
+export default async function handler(req, res) {
+    res.setHeader(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, private"
+    );
 
     if (req.method !== "GET") {
         res.setHeader("Allow", "GET");
@@ -13,17 +16,40 @@ export default function handler(req, res) {
     }
 
     try {
-        const autenticado = administradorAutenticado(req);
+        const administradorId = obterAdministradorId(req);
 
-        if (!autenticado) {
+        if (!administradorId) {
             return res.status(401).json({
                 autenticado: false,
                 erro: "Acesso não autorizado."
             });
         }
 
+        const administradores = await sql`
+            SELECT id, nome, email, nivel
+            FROM administradores
+            WHERE id = ${administradorId}
+              AND ativo = TRUE
+            LIMIT 1
+        `;
+
+        if (administradores.length === 0) {
+            return res.status(401).json({
+                autenticado: false,
+                erro: "Conta administrativa inativa ou inexistente."
+            });
+        }
+
+        const administrador = administradores[0];
+
         return res.status(200).json({
-            autenticado: true
+            autenticado: true,
+            administrador: {
+                id: administrador.id,
+                nome: administrador.nome,
+                email: administrador.email,
+                nivel: administrador.nivel
+            }
         });
     } catch (erro) {
         console.error(
@@ -37,4 +63,3 @@ export default function handler(req, res) {
         });
     }
 }
-

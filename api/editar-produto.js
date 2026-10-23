@@ -1,9 +1,8 @@
-
-import { neon } from "@neondatabase/serverless";
-import { administradorAutenticado } from "../lib/auth.js";
+import sql from "../lib/db.js";
+import { obterAdministradorId } from "../lib/auth.js";
 
 function validarImagem(valor) {
-    // Campo não enviado: manter a imagem atual.
+    // Se a propriedade não foi enviada, mantém a imagem atual.
     if (valor === undefined) {
         return {
             valida: true,
@@ -12,7 +11,7 @@ function validarImagem(valor) {
         };
     }
 
-    // Campo vazio ou nulo: remover a imagem.
+    // null ou string vazia remove a imagem atual.
     if (valor === null || valor === "") {
         return {
             valida: true,
@@ -62,7 +61,10 @@ function validarImagem(valor) {
 }
 
 export default async function handler(req, res) {
-    res.setHeader("Cache-Control", "no-store");
+    res.setHeader(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, private"
+    );
 
     if (req.method !== "PUT") {
         res.setHeader("Allow", "PUT");
@@ -73,12 +75,31 @@ export default async function handler(req, res) {
     }
 
     try {
-        if (!administradorAutenticado(req)) {
+        // Verifica a sessão administrativa.
+        const administradorId = obterAdministradorId(req);
+
+        if (!administradorId) {
             return res.status(401).json({
                 erro: "Você precisa estar autenticado."
             });
         }
 
+        // Confirma que o administrador continua ativo.
+        const administradores = await sql`
+            SELECT id
+            FROM administradores
+            WHERE id = ${administradorId}
+              AND ativo = TRUE
+            LIMIT 1
+        `;
+
+        if (administradores.length === 0) {
+            return res.status(401).json({
+                erro: "Conta administrativa inativa ou inexistente."
+            });
+        }
+
+        // Lê e valida o corpo da requisição.
         let dados;
 
         try {
@@ -123,8 +144,14 @@ export default async function handler(req, res) {
         }
 
         const nome = dados.nome.trim();
-        const descricao = dados.descricao?.trim() || "";
+        const descricao =
+            typeof dados.descricao === "string"
+                ? dados.descricao.trim()
+                : "";
 
+        const preco = Number(dados.preco);
+        const estoque = Number(dados.estoque);
+        const categoriaId = Number(dados.categoria_id);
         const imagemValidada = validarImagem(dados.imagem);
 
         if (!imagemValidada.valida) {
@@ -133,14 +160,13 @@ export default async function handler(req, res) {
             });
         }
 
-        const preco = Number(dados.preco);
-        const estoque = Number(dados.estoque);
-        const categoriaId = Number(dados.categoria_id);
-
         if (
             nome.length < 2 ||
             nome.length > 150 ||
             descricao.length > 2000 ||
+            dados.preco === "" ||
+            dados.estoque === "" ||
+            dados.categoria_id === "" ||
             !Number.isFinite(preco) ||
             preco <= 0 ||
             !Number.isSafeInteger(estoque) ||
@@ -149,41 +175,30 @@ export default async function handler(req, res) {
             categoriaId < 1
         ) {
             return res.status(400).json({
-                erro: "Confira os dados informados."
+                erro: "Confira o nome, a descrição, o preço, o estoque e a categoria."
             });
         }
 
-        const databaseUrl = process.env.PETSHOP_DATABASE_URL;
-
-        if (!databaseUrl) {
-            console.error(
-                "PETSHOP_DATABASE_URL não configurada."
-            );
-
-            return res.status(500).json({
-                erro: "Banco de dados indisponível."
-            });
-        }
-
-        const conexao = neon(databaseUrl);
-
-        const categoria = await conexao`
+        // Confirma que a categoria existe.
+        const categorias = await sql`
             SELECT id
             FROM categorias
             WHERE id = ${categoriaId}
             LIMIT 1
         `;
 
-        if (categoria.length === 0) {
+        if (categorias.length === 0) {
             return res.status(400).json({
                 erro: "A categoria informada não existe."
             });
         }
 
+        // Atualiza os campos sem sobrescrever a imagem
+        // quando ela não foi enviada.
         let resultado;
 
         if (imagemValidada.manterAtual) {
-            resultado = await conexao`
+            resultado = await sql`
                 UPDATE produtos
                 SET
                     nome = ${nome},
@@ -204,7 +219,7 @@ export default async function handler(req, res) {
                     ativo
             `;
         } else {
-            resultado = await conexao`
+            resultado = await sql`
                 UPDATE produtos
                 SET
                     nome = ${nome},
@@ -229,7 +244,7 @@ export default async function handler(req, res) {
 
         if (resultado.length === 0) {
             return res.status(404).json({
-                erro: "Produto não encontrado ou já inativo."
+                erro: "Produto não encontrado ou já desativado."
             });
         }
 
@@ -238,7 +253,10 @@ export default async function handler(req, res) {
             produto: resultado[0]
         });
     } catch (erro) {
-        console.error("Erro ao atualizar produto:", erro);
+        console.error(
+            "Erro ao atualizar produto:",
+            erro
+        );
 
         return res.status(500).json({
             erro: "Não foi possível atualizar o produto."

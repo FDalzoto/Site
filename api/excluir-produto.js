@@ -1,9 +1,11 @@
-
-import { neon } from "@neondatabase/serverless";
-import { administradorAutenticado } from "../lib/auth.js";
+import sql from "../lib/db.js";
+import { obterAdministradorId } from "../lib/auth.js";
 
 export default async function handler(req, res) {
-    res.setHeader("Cache-Control", "no-store");
+    res.setHeader(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, private"
+    );
 
     if (req.method !== "DELETE") {
         res.setHeader("Allow", "DELETE");
@@ -14,14 +16,31 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Verifica se o administrador está autenticado.
-        if (!administradorAutenticado(req)) {
+        // Verifica a sessão administrativa.
+        const administradorId = obterAdministradorId(req);
+
+        if (!administradorId) {
             return res.status(401).json({
                 erro: "Você precisa estar autenticado."
             });
         }
 
-        // Valida os dados recebidos.
+        // Confirma que a conta administrativa continua ativa.
+        const administradores = await sql`
+            SELECT id
+            FROM administradores
+            WHERE id = ${administradorId}
+              AND ativo = TRUE
+            LIMIT 1
+        `;
+
+        if (administradores.length === 0) {
+            return res.status(401).json({
+                erro: "Conta administrativa inativa ou inexistente."
+            });
+        }
+
+        // Lê os dados enviados pelo painel.
         let dados;
 
         try {
@@ -52,23 +71,8 @@ export default async function handler(req, res) {
             });
         }
 
-        // Verifica a configuração do banco.
-        const databaseUrl = process.env.PETSHOP_DATABASE_URL;
-
-        if (!databaseUrl) {
-            console.error(
-                "PETSHOP_DATABASE_URL não configurada."
-            );
-
-            return res.status(500).json({
-                erro: "Banco de dados indisponível."
-            });
-        }
-
-        const conexao = neon(databaseUrl);
-
-        // Exclusão lógica: preserva o registro no banco.
-        const resultado = await conexao`
+        // Desativa o produto sem removê-lo do banco de dados.
+        const resultado = await sql`
             UPDATE produtos
             SET ativo = FALSE
             WHERE id = ${id}
@@ -78,19 +82,22 @@ export default async function handler(req, res) {
 
         if (resultado.length === 0) {
             return res.status(404).json({
-                erro: "Produto não encontrado ou já inativo."
+                erro: "Produto não encontrado ou já desativado."
             });
         }
 
         return res.status(200).json({
-            mensagem: "Produto excluído do catálogo com sucesso.",
+            mensagem: "Produto desativado do catálogo com sucesso.",
             produto: resultado[0]
         });
     } catch (erro) {
-        console.error("Erro ao excluir produto:", erro);
+        console.error(
+            "Erro ao desativar produto:",
+            erro
+        );
 
         return res.status(500).json({
-            erro: "Não foi possível excluir o produto."
+            erro: "Não foi possível desativar o produto."
         });
     }
 }

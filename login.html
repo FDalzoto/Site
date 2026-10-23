@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -206,39 +206,21 @@
 
             <form id="formLogin">
                 <div class="campo">
-                    <label for="usuario">Usuário</label>
-                    <input
-                        type="text"
-                        id="usuario"
-                        name="usuario"
-                        autocomplete="username"
-                        maxlength="200"
-                        required
-                    >
+                    <label for="usuario">E-mail</label>
+                    <input type="email" id="usuario" name="usuario" autocomplete="username" maxlength="254" required>
                 </div>
 
                 <div class="campo">
                     <label for="senha">Senha</label>
-                    <input
-                        type="password"
-                        id="senha"
-                        name="senha"
-                        autocomplete="current-password"
-                        maxlength="200"
-                        required
-                    >
+                    <input type="password" id="senha" name="senha" autocomplete="current-password" maxlength="200"
+                        required>
                 </div>
 
                 <button class="botao" id="botaoLogin" type="submit">
                     Entrar no painel
                 </button>
 
-                <div
-                    class="mensagem"
-                    id="mensagem"
-                    role="status"
-                    aria-live="polite"
-                ></div>
+                <div class="mensagem" id="mensagem" role="status" aria-live="polite"></div>
             </form>
         </section>
 
@@ -289,7 +271,7 @@
                 mensagem.className = "mensagem sucesso";
                 mensagem.textContent = "Login realizado! Abrindo o painel...";
 
-                window.location.href = "/admin.html";
+                window.location.replace("/admin.html");
             } catch (erro) {
                 mensagem.className = "mensagem erro";
                 mensagem.textContent =
@@ -301,4 +283,5 @@
         });
     </script>
 </body>
+
 </html>

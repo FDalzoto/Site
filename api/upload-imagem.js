@@ -1,7 +1,8 @@
 
 import { put } from "@vercel/blob";
 import { randomUUID } from "node:crypto";
-import { administradorAutenticado } from "../lib/auth.js";
+import sql from "../lib/db.js";
+import { obterAdministradorId } from "../lib/auth.js";
 
 export const config = {
     api: {
@@ -80,7 +81,7 @@ async function lerImagem(req) {
 }
 
 export default async function handler(req, res) {
-    res.setHeader("Cache-Control", "no-store");
+    res.setHeader("Cache-Control", "no-store, private");
 
     if (req.method !== "POST") {
         res.setHeader("Allow", "POST");
@@ -91,9 +92,25 @@ export default async function handler(req, res) {
     }
 
     try {
-        if (!administradorAutenticado(req)) {
+        const administradorId = obterAdministradorId(req);
+
+        if (!administradorId) {
             return res.status(401).json({
                 erro: "Você precisa estar autenticado."
+            });
+        }
+
+        const administradores = await sql`
+            SELECT id
+            FROM administradores
+            WHERE id = ${administradorId}
+              AND ativo = TRUE
+            LIMIT 1
+        `;
+
+        if (administradores.length === 0) {
+            return res.status(401).json({
+                erro: "Conta administrativa inativa ou inexistente."
             });
         }
 
@@ -112,8 +129,7 @@ export default async function handler(req, res) {
             });
         }
 
-        const tamanhoInformado =
-            req.headers["content-length"];
+        const tamanhoInformado = req.headers["content-length"];
 
         if (tamanhoInformado !== undefined) {
             if (
@@ -132,8 +148,7 @@ export default async function handler(req, res) {
             }
         }
 
-        const storeId =
-            process.env.PETSHOP_PUBLIC_BLOB_STORE_ID;
+        const storeId = process.env.PETSHOP_PUBLIC_BLOB_STORE_ID;
 
         if (!storeId) {
             console.error(

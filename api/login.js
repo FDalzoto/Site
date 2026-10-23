@@ -1,22 +1,14 @@
-
-import { timingSafeEqual } from "node:crypto";
+import bcrypt from "bcryptjs";
+import sql from "../lib/db.js";
 import { criarSessao } from "../lib/auth.js";
 
 const TAMANHO_MAXIMO_CREDENCIAL = 200;
 
-function compararSeguro(valorRecebido, valorCorreto) {
-    const recebido = Buffer.from(valorRecebido, "utf8");
-    const correto = Buffer.from(valorCorreto, "utf8");
-
-    if (recebido.length !== correto.length) {
-        return false;
-    }
-
-    return timingSafeEqual(recebido, correto);
-}
-
 export default async function handler(req, res) {
-    res.setHeader("Cache-Control", "no-store");
+    res.setHeader(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, private"
+    );
 
     if (req.method !== "POST") {
         res.setHeader("Allow", "POST");
@@ -27,24 +19,6 @@ export default async function handler(req, res) {
     }
 
     try {
-        const usuarioCorreto = process.env.ADMIN_USER;
-        const senhaCorreta = process.env.ADMIN_PASSWORD;
-
-        if (
-            typeof usuarioCorreto !== "string" ||
-            typeof senhaCorreta !== "string" ||
-            usuarioCorreto.trim() === "" ||
-            senhaCorreta.length === 0
-        ) {
-            console.error(
-                "Credenciais administrativas não configuradas."
-            );
-
-            return res.status(500).json({
-                erro: "Configuração de autenticação indisponível."
-            });
-        }
-
         let dados;
 
         try {
@@ -63,7 +37,7 @@ export default async function handler(req, res) {
             Array.isArray(dados)
         ) {
             return res.status(400).json({
-                erro: "Informe usuário e senha válidos."
+                erro: "Informe e-mail e senha válidos."
             });
         }
 
@@ -73,33 +47,61 @@ export default async function handler(req, res) {
         if (
             typeof usuario !== "string" ||
             typeof senha !== "string" ||
-            usuario.length === 0 ||
+            usuario.trim().length === 0 ||
             usuario.length > TAMANHO_MAXIMO_CREDENCIAL ||
             senha.length === 0 ||
             senha.length > TAMANHO_MAXIMO_CREDENCIAL
         ) {
             return res.status(400).json({
-                erro: "Informe usuário e senha válidos."
+                erro: "Informe e-mail e senha válidos."
             });
         }
 
-        const usuarioValido = compararSeguro(
-            usuario.trim(),
-            usuarioCorreto.trim()
-        );
+        const email = usuario.trim().toLowerCase();
 
-        const senhaValida = compararSeguro(
-            senha,
-            senhaCorreta
-        );
+        const administradores = await sql`
+            SELECT id, email, senha_hash, nivel
+            FROM administradores
+            WHERE LOWER(email) = ${email}
+              AND ativo = TRUE
+            LIMIT 1
+        `;
 
-        if (!usuarioValido || !senhaValida) {
+        if (administradores.length === 0) {
             return res.status(401).json({
-                erro: "Usuário ou senha incorretos."
+                erro: "E-mail ou senha incorretos."
             });
         }
 
-        const token = criarSessao();
+        const administrador = administradores[0];
+
+        if (
+            typeof administrador.senha_hash !== "string" ||
+            administrador.senha_hash.length === 0
+        ) {
+            return res.status(401).json({
+                erro: "E-mail ou senha incorretos."
+            });
+        }
+
+        let senhaValida = false;
+
+        try {
+            senhaValida = await bcrypt.compare(
+                senha,
+                administrador.senha_hash
+            );
+        } catch {
+            senhaValida = false;
+        }
+
+        if (!senhaValida) {
+            return res.status(401).json({
+                erro: "E-mail ou senha incorretos."
+            });
+        }
+
+        const token = criarSessao(administrador.id);
 
         res.setHeader(
             "Set-Cookie",
