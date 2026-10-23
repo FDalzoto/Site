@@ -1408,16 +1408,29 @@
         document.getElementById("botaoAtualizarAdministradores").addEventListener("click", carregarAdministradores);
 
         async function inicializarGerenciamentoAdministradores() {
-            if (document.documentElement.dataset.nivel !== "superadmin") return;
             try {
+                // Não depender de dataset.nivel definido por outra requisição assíncrona:
+                // isso poderia fazer a inicialização retornar cedo demais.
                 const dados = await requisicaoAdministradores("/api/verificar-sessao");
                 if (dados.autenticado !== true || !dados.administrador) return;
+
                 administradorAtual = dados.administrador;
-                if (administradorAtual.nivel !== "superadmin") return;
+                const nivelAtual = String(administradorAtual.nivel || "").trim().toLowerCase();
+                if (nivelAtual !== "superadmin") {
+                    linkAdministradores.hidden = true;
+                    secaoAdministradores.hidden = true;
+                    return;
+                }
+
+                document.documentElement.dataset.nivel = nivelAtual;
                 linkAdministradores.hidden = false;
                 secaoAdministradores.hidden = false;
                 await carregarAdministradores();
-            } catch (erro) { console.error("Não foi possível inicializar o gerenciamento de administradores:", erro); }
+            } catch (erro) {
+                console.error("Não foi possível inicializar o gerenciamento de administradores:", erro);
+                linkAdministradores.hidden = true;
+                secaoAdministradores.hidden = true;
+            }
         }
 
         carregarProdutos();
