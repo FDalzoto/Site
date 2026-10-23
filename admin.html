@@ -1348,7 +1348,7 @@
             const celula = adicionarCelulaAdmin(carregando, "Carregando administradores..."); celula.colSpan = 6; celula.className = "vazio";
             listaAdministradores.appendChild(carregando);
             try {
-                const dados = await requisicaoAdministradores("/api/admins/listar");
+                const dados = await requisicaoAdministradores("/api/admins");
                 const admins = Array.isArray(dados) ? dados : dados.administradores;
                 if (!Array.isArray(admins)) throw new Error("Formato da lista de administradores inválido.");
                 listaAdministradoresCarregada = admins;
@@ -1391,7 +1391,7 @@
             if (new TextEncoder().encode(senha).length > 72) return mostrarMensagemAdmin("A senha excede o limite de 72 bytes. Use uma senha menor.", "erro");
             botaoCadastrarAdmin.disabled = true; botaoCadastrarAdmin.textContent = "Cadastrando...";
             try {
-                const dados = await requisicaoAdministradores("/api/admins/cadastrar", { method: "POST", body: JSON.stringify({ nome, email, senha, nivel }) });
+                const dados = await requisicaoAdministradores("/api/admins", { method: "POST", body: JSON.stringify({ nome, email, senha, nivel }) });
                 formularioAdmin.reset(); mostrarMensagemAdmin(dados.mensagem || "Administrador cadastrado com sucesso.", "sucesso");
                 await carregarAdministradores();
             } catch (erro) { mostrarMensagemAdmin(erro.message || "Não foi possível cadastrar o administrador.", "erro"); }
@@ -1401,7 +1401,7 @@
         async function desativarAdministrador(admin) {
             if (!admin || !admin.id || !confirm(`Deseja desativar a conta de ${admin.nome || admin.email}? Essa pessoa perderá o acesso ao painel.`)) return;
             try {
-                const dados = await requisicaoAdministradores("/api/admins/excluir", { method: "DELETE", body: JSON.stringify({ id: admin.id }) });
+                const dados = await requisicaoAdministradores("/api/admins", { method: "DELETE", body: JSON.stringify({ id: admin.id }) });
                 mostrarMensagemAdmin(dados.mensagem || "Conta administrativa desativada.", "sucesso");
                 await carregarAdministradores();
             } catch (erro) { mostrarMensagemAdmin(erro.message || "Não foi possível desativar a conta.", "erro"); }
