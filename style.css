@@ -249,13 +249,13 @@ h1 {
 }
 
 .hero-card p {
-    color: rgba(255,255,255,0.82);
+    color: rgba(255, 255, 255, 0.82);
     font-size: 14px;
     margin-bottom: 25px;
 }
 
 .hero-info {
-    border-top: 1px solid rgba(255,255,255,0.22);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
     padding-top: 20px;
 }
 
@@ -439,7 +439,7 @@ section {
 }
 
 .products .section-head p {
-    color: rgba(255,255,255,0.78);
+    color: rgba(255, 255, 255, 0.78);
 }
 
 .products .eyebrow {
@@ -453,15 +453,15 @@ section {
 }
 
 .product {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 18px;
     padding: 24px;
     transition: 0.2s;
 }
 
 .product:hover {
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.12);
     transform: translateY(-3px);
 }
 
@@ -472,14 +472,14 @@ section {
 }
 
 .product p {
-    color: rgba(255,255,255,0.74);
+    color: rgba(255, 255, 255, 0.74);
     font-size: 13px;
 }
 
 .product-note {
     margin-top: 25px;
     font-size: 13px;
-    color: rgba(255,255,255,0.67);
+    color: rgba(255, 255, 255, 0.67);
 }
 
 /* =========================
@@ -577,7 +577,7 @@ section {
 }
 
 .rating-box span {
-    color: rgba(255,255,255,0.78);
+    color: rgba(255, 255, 255, 0.78);
 }
 
 .review-grid {
@@ -714,7 +714,7 @@ details p {
 }
 
 .cta-box p {
-    color: rgba(255,255,255,0.76);
+    color: rgba(255, 255, 255, 0.76);
     max-width: 650px;
 }
 
@@ -733,7 +733,7 @@ footer {
     grid-template-columns: 1.3fr 1fr 1fr;
     gap: 40px;
     padding-bottom: 35px;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 footer h3 {
@@ -744,7 +744,7 @@ footer h3 {
 
 footer p,
 footer a {
-    color: rgba(255,255,255,0.68);
+    color: rgba(255, 255, 255, 0.68);
     font-size: 13px;
 }
 
@@ -755,7 +755,7 @@ footer a:hover {
 .footer-bottom {
     padding-top: 20px;
     text-align: center;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255, 255, 255, 0.5);
     font-size: 12px;
 }
 
@@ -1085,7 +1085,8 @@ h1 {
     letter-spacing: -0.045em;
 }
 
-h2, h3 {
+h2,
+h3 {
     letter-spacing: -0.025em;
 }
 
@@ -1287,6 +1288,7 @@ footer a:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
@@ -1297,6 +1299,7 @@ footer a:hover {
 }
 
 @media (max-width: 700px) {
+
     .hero-card,
     .cta-box {
         box-shadow: 0 16px 35px rgba(13, 59, 37, 0.16);
@@ -1308,4 +1311,239 @@ footer a:hover {
     .contact-card:hover {
         transform: none;
     }
+
+
+    /* =========================================
+   BOTÕES E FILTROS DO CATÁLOGO DE PRODUTOS
+========================================= */
+
+    /* Container dos filtros */
+    .filtros-categorias {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 20px 0 28px;
+    }
+
+    /* Botões de categorias */
+    .filtros-categorias button,
+    .filtros-categorias a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        padding: 9px 19px;
+
+        border: 1px solid var(--bd);
+        border-radius: 50px;
+
+        background: var(--card);
+        color: var(--pri);
+
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+
+        cursor: pointer;
+
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    /* Efeito ao passar o mouse */
+    .filtros-categorias button:hover,
+    .filtros-categorias a:hover {
+        background: #e8f2e9;
+        border-color: var(--pri2);
+        transform: translateY(-2px);
+    }
+
+    /* Categoria selecionada */
+    .filtros-categorias button.ativo,
+    .filtros-categorias a.ativo,
+    .filtros-categorias button[aria-pressed="true"] {
+        background: linear-gradient(135deg,
+                var(--pri2),
+                var(--pri));
+
+        color: #ffffff;
+        border-color: var(--pri);
+
+        box-shadow: 0 5px 14px rgba(20, 83, 45, 0.16);
+    }
+
+    /* Acessibilidade dos filtros */
+    .filtros-categorias button:focus-visible,
+    .filtros-categorias a:focus-visible {
+        outline: 3px solid var(--gold);
+        outline-offset: 3px;
+    }
+
+    /* =========================================
+   BOTÃO ADICIONAR AO PEDIDO
+========================================= */
+
+    .btn-adicionar,
+    button.btn-adicionar,
+    .produto-card .btn-adicionar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        min-height: 43px;
+        padding: 11px 17px;
+
+        border: 1px solid var(--pri);
+        border-radius: 11px;
+
+        background: linear-gradient(135deg,
+                var(--pri2),
+                var(--pri));
+
+        color: #ffffff;
+
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.4;
+
+        cursor: pointer;
+
+        box-shadow: 0 5px 13px rgba(20, 83, 45, 0.12);
+
+        transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    /* Hover do botão */
+    .btn-adicionar:hover,
+    button.btn-adicionar:hover,
+    .produto-card .btn-adicionar:hover {
+        background: var(--pri2);
+        border-color: var(--pri2);
+
+        box-shadow: 0 8px 18px rgba(20, 83, 45, 0.20);
+
+        transform: translateY(-2px);
+    }
+
+    /* Clique */
+    .btn-adicionar:active,
+    button.btn-adicionar:active,
+    .produto-card .btn-adicionar:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 8px rgba(20, 83, 45, 0.12);
+    }
+
+    /* Foco por teclado */
+    .btn-adicionar:focus-visible,
+    button.btn-adicionar:focus-visible {
+        outline: 3px solid var(--gold);
+        outline-offset: 3px;
+    }
+
+    /* Botão desabilitado */
+    .btn-adicionar:disabled,
+    button.btn-adicionar:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    /* =========================================
+   BOTÃO ENVIAR PEDIDO PELO WHATSAPP
+========================================= */
+
+    .btn-whatsapp,
+    .button-whatsapp {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+
+        min-height: 48px;
+        padding: 13px 22px;
+
+        border: 1px solid #20a956;
+        border-radius: 12px;
+
+        background: #25d366;
+        color: #073b20;
+
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+        text-decoration: none;
+
+        cursor: pointer;
+
+        transition:
+            background-color 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .btn-whatsapp:hover,
+    .button-whatsapp:hover {
+        background: #20bd5a;
+        box-shadow: 0 7px 18px rgba(37, 211, 102, 0.22);
+        transform: translateY(-2px);
+    }
+
+    /* =========================================
+   BOTÕES EM TELAS PEQUENAS
+========================================= */
+
+    @media (max-width: 600px) {
+        .filtros-categorias {
+            gap: 8px;
+            margin: 16px 0 22px;
+        }
+
+        .filtros-categorias button,
+        .filtros-categorias a {
+            min-height: 38px;
+            padding: 8px 15px;
+            font-size: 12px;
+        }
+
+        .btn-adicionar,
+        button.btn-adicionar {
+            min-height: 41px;
+            padding: 10px 14px;
+            font-size: 12px;
+        }
+
+        .btn-whatsapp,
+        .button-whatsapp {
+            width: 100%;
+            min-height: 45px;
+            padding: 12px 16px;
+        }
+    }
+
+    /* Respeita usuários que preferem menos animações */
+    @media (prefers-reduced-motion: reduce) {
+
+        .filtros-categorias button,
+        .filtros-categorias a,
+        .btn-adicionar,
+        .btn-whatsapp,
+        .button-whatsapp {
+            transition: none;
+        }
+    }
+
 }
