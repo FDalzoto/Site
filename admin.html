@@ -623,7 +623,7 @@
                         <div class="acoes-formulario"><button type="submit" class="botao" id="botaoCadastrarAdmin">Cadastrar administrador</button></div>
                     </form>
                 </div>
-                <div class="secao-topo"><div><h2>Contas administrativas</h2><p class="secao-descricao">Contas desativadas não devem conseguir entrar no painel.</p></div><strong id="totalAdministradores">— contas</strong></div>
+                <div class="secao-topo"><div><h2>Contas administrativas</h2><p class="secao-descricao">Exclua permanentemente contas administrativas que não serão mais utilizadas.</p></div><strong id="totalAdministradores">— contas</strong></div>
                 <div class="tabela-container"><table><thead><tr><th>Nome</th><th>E-mail</th><th>Nível</th><th>Situação</th><th>Criado em</th><th>Ações</th></tr></thead><tbody id="listaAdministradores"><tr><td colspan="6" class="vazio">Carregando administradores...</td></tr></tbody></table></div>
             </section>
 
@@ -1366,9 +1366,9 @@
                     adicionarCelulaAdmin(tr, data);
                     const acoes = document.createElement("td"); const btn = document.createElement("button"); btn.type = "button"; btn.className = "botao-excluir";
                     const ehAtual = administradorAtual && String(admin.id) === String(administradorAtual.id);
-                    btn.textContent = admin.ativo === true ? (ehAtual ? "Sua conta" : "Desativar") : "Desativada";
-                    btn.disabled = admin.ativo !== true || ehAtual;
-                    if (admin.ativo === true && !ehAtual) btn.addEventListener("click", () => desativarAdministrador(admin));
+                    btn.textContent = ehAtual ? "Sua conta" : "Excluir";
+                    btn.disabled = ehAtual;
+                    if (!ehAtual) btn.addEventListener("click", () => excluirAdministrador(admin));
                     acoes.appendChild(btn); tr.appendChild(acoes); listaAdministradores.appendChild(tr);
                 });
             } catch (erro) {
@@ -1396,13 +1396,14 @@
             finally { botaoCadastrarAdmin.disabled = false; botaoCadastrarAdmin.textContent = "Cadastrar administrador"; }
         });
 
-        async function desativarAdministrador(admin) {
-            if (!admin || !admin.id || !confirm(`Deseja desativar a conta de ${admin.nome || admin.email}? Essa pessoa perderá o acesso ao painel.`)) return;
+        async function excluirAdministrador(admin) {
+            if (!admin || !admin.id) return;
+            if (!confirm(`Deseja excluir permanentemente a conta de ${admin.nome || admin.email}? Essa ação não poderá ser desfeita.`)) return;
             try {
                 const dados = await requisicaoAdministradores("/api/admins", { method: "DELETE", body: JSON.stringify({ id: admin.id }) });
-                mostrarMensagemAdmin(dados.mensagem || "Conta administrativa desativada.", "sucesso");
+                mostrarMensagemAdmin(dados.mensagem || "Conta administrativa excluída.", "sucesso");
                 await carregarAdministradores();
-            } catch (erro) { mostrarMensagemAdmin(erro.message || "Não foi possível desativar a conta.", "erro"); }
+            } catch (erro) { mostrarMensagemAdmin(erro.message || "Não foi possível excluir a conta administrativa.", "erro"); }
         }
 
         document.getElementById("botaoAtualizarAdministradores").addEventListener("click", carregarAdministradores);
