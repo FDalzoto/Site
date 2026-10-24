@@ -1546,4 +1546,39 @@ footer a:hover {
         }
     }
 
+
+    /* Ajuste: cards de produtos mais compactos */
+    .produto-card {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .produto-card img {
+        max-height: 180px;
+        object-fit: contain;
+    }
+
+    .produto-card h3 {
+        font-size: 17px;
+        line-height: 1.4;
+        margin-bottom: 6px;
+    }
+
+    .produto-card p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* Mantém o tamanho adequado no celular */
+    @media (max-width: 600px) {
+        .produto-card {
+            padding: 13px;
+        }
+
+        .produto-card img {
+            max-height: 150px;
+        }
+    }
+
+
 }
