@@ -656,6 +656,19 @@
         </div>
     </div>
 
+    <div id="modalExclusaoAdmin" class="modal-exclusao" hidden>
+        <div class="caixa-exclusao" role="dialog" aria-modal="true" aria-labelledby="tituloExclusaoAdmin" aria-describedby="descricaoExclusaoAdmin">
+            <div class="icone-exclusao" aria-hidden="true">!</div>
+            <h2 id="tituloExclusaoAdmin">Excluir administrador?</h2>
+            <p id="descricaoExclusaoAdmin">Tem certeza de que deseja excluir esta conta administrativa permanentemente?</p>
+            <p class="aviso-exclusao">Esta ação não poderá ser desfeita. A conta será removida do banco de dados.</p>
+            <div class="botoes-exclusao">
+                <button type="button" id="cancelarExclusaoAdmin" class="btn-cancelar-exclusao">Cancelar</button>
+                <button type="button" id="confirmarExclusaoAdmin" class="btn-confirmar-exclusao">Sim, excluir</button>
+            </div>
+        </div>
+    </div>
+
     <div id="notificacaoPainel" class="notificacao-painel" role="status" aria-live="polite" hidden></div>
 
     <script>
@@ -1396,15 +1409,71 @@
             finally { botaoCadastrarAdmin.disabled = false; botaoCadastrarAdmin.textContent = "Cadastrar administrador"; }
         });
 
+        const modalExclusaoAdmin = document.getElementById("modalExclusaoAdmin");
+        const descricaoExclusaoAdmin = document.getElementById("descricaoExclusaoAdmin");
+        const cancelarExclusaoAdmin = document.getElementById("cancelarExclusaoAdmin");
+        const confirmarExclusaoAdmin = document.getElementById("confirmarExclusaoAdmin");
+        let administradorPendenteExclusao = null;
+        let focoAnteriorExclusaoAdmin = null;
+
+        function abrirModalExclusaoAdmin(admin) {
+            administradorPendenteExclusao = admin;
+            focoAnteriorExclusaoAdmin = document.activeElement;
+            descricaoExclusaoAdmin.replaceChildren();
+            descricaoExclusaoAdmin.append(document.createTextNode("Tem certeza de que deseja excluir permanentemente a conta de "));
+            const nomeAdmin = document.createElement("strong");
+            nomeAdmin.textContent = admin.nome || admin.email || "este administrador";
+            descricaoExclusaoAdmin.append(nomeAdmin, document.createTextNode("?"));
+            confirmarExclusaoAdmin.disabled = false;
+            cancelarExclusaoAdmin.disabled = false;
+            confirmarExclusaoAdmin.textContent = "Sim, excluir";
+            modalExclusaoAdmin.hidden = false;
+            cancelarExclusaoAdmin.focus();
+        }
+
+        function fecharModalExclusaoAdmin() {
+            if (!modalExclusaoAdmin.hidden && confirmarExclusaoAdmin.disabled) return;
+            modalExclusaoAdmin.hidden = true;
+            administradorPendenteExclusao = null;
+            confirmarExclusaoAdmin.disabled = false;
+            cancelarExclusaoAdmin.disabled = false;
+            confirmarExclusaoAdmin.textContent = "Sim, excluir";
+            if (focoAnteriorExclusaoAdmin?.isConnected) focoAnteriorExclusaoAdmin.focus();
+        }
+
         async function excluirAdministrador(admin) {
-            if (!admin || !admin.id) return;
-            if (!confirm(`Deseja excluir permanentemente a conta de ${admin.nome || admin.email}? Essa ação não poderá ser desfeita.`)) return;
+            if (!admin || !admin.id || (administradorAtual && String(admin.id) === String(administradorAtual.id))) return;
+            abrirModalExclusaoAdmin(admin);
+        }
+
+        cancelarExclusaoAdmin.addEventListener("click", fecharModalExclusaoAdmin);
+        modalExclusaoAdmin.addEventListener("click", evento => {
+            if (evento.target === modalExclusaoAdmin) fecharModalExclusaoAdmin();
+        });
+        document.addEventListener("keydown", evento => {
+            if (evento.key === "Escape" && !modalExclusaoAdmin.hidden) fecharModalExclusaoAdmin();
+        });
+        confirmarExclusaoAdmin.addEventListener("click", async () => {
+            if (!administradorPendenteExclusao) return;
+            const admin = administradorPendenteExclusao;
+            confirmarExclusaoAdmin.disabled = true;
+            cancelarExclusaoAdmin.disabled = true;
+            confirmarExclusaoAdmin.textContent = "Excluindo...";
             try {
                 const dados = await requisicaoAdministradores("/api/admins", { method: "DELETE", body: JSON.stringify({ id: admin.id }) });
+                modalExclusaoAdmin.hidden = true;
+                administradorPendenteExclusao = null;
                 mostrarMensagemAdmin(dados.mensagem || "Conta administrativa excluída.", "sucesso");
                 await carregarAdministradores();
-            } catch (erro) { mostrarMensagemAdmin(erro.message || "Não foi possível excluir a conta administrativa.", "erro"); }
-        }
+                if (focoAnteriorExclusaoAdmin?.isConnected) focoAnteriorExclusaoAdmin.focus();
+            } catch (erro) {
+                mostrarMensagemAdmin(erro.message || "Não foi possível excluir a conta administrativa.", "erro");
+            } finally {
+                confirmarExclusaoAdmin.disabled = false;
+                cancelarExclusaoAdmin.disabled = false;
+                confirmarExclusaoAdmin.textContent = "Sim, excluir";
+            }
+        });
 
         document.getElementById("botaoAtualizarAdministradores").addEventListener("click", carregarAdministradores);
 
